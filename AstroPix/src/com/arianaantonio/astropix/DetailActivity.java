@@ -19,7 +19,7 @@ public class DetailActivity extends Activity {
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
 		return super.onMenuItemSelected(featureId, item);
-	}
+	} 
 
 	@Override
 	public MenuInflater getMenuInflater() {

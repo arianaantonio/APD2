@@ -44,7 +44,6 @@ public final class R {
         public static final int splash=0x7f02000a;
     }
     public static final class id {
-        public static final int action_example=0x7f090015;
         public static final int action_settings=0x7f090014;
         public static final int container=0x7f09000b;
         public static final int detailfragment=0x7f09000d;
@@ -98,6 +97,7 @@ public final class R {
         public static final int title_section1=0x7f050001;
         public static final int title_section2=0x7f050002;
         public static final int title_section3=0x7f050003;
+        public static final int title_section4=0x7f050012;
         public static final int username=0x7f05000c;
     }
     public static final class style {

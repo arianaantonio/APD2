@@ -1,27 +1,49 @@
 package com.arianaantonio.astropix;
 
-import android.app.Activity;
+import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import api.FileManager;
+import api.ServiceClass;
+
+import com.loopj.android.image.SmartImageView;
 
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+	
+	Context mContext;
+	FileManager mFile;
+	String mFileName = "ImageFile.txt";
+	private SmartImageView imageView;
+	private SmartImageView imageView2;
 
+	private static FileManager fileManager = FileManager.getInstance();
+	final MyHandler handler = new MyHandler(this);
+	static ArrayList<HashMap<String, ?>> myData = new ArrayList<HashMap<String, ?>>();
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -35,28 +57,176 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        Log.i("Main activity", "Working 1");
+        setContentView(R.layout.activity_main); 
+        Log.i("Main activity", "Working 2");
+        mContext = this;
+        mFile = FileManager.getInstance();
+        
+        //imageView = (SmartImageView) findViewById(R.id.image_of_the_day);
+        //imageView2 = (SmartImageView) findViewById(R.id.runner_up);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
+        
+        final MyHandler handler = new MyHandler(this);
+        getData(handler);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        Log.i("Main activity", "Working 3");
+    } 
+    
+    private static class MyHandler extends Handler {
+    
+    	private final WeakReference<MainActivity> myActivity;
+    	public MyHandler(MainActivity activity) {
+    		Log.i("Main activity", "Inside handleMessage");
+    	myActivity = new WeakReference<MainActivity>(activity);
+    	}
+
+    	@Override
+    	public void handleMessage(Message message) {
+	    	MainActivity activity = myActivity.get();
+	    	Log.i("Main activity", "Inside handleMessage");
+	    	if (activity !=null) {
+		    	Object objectReturned = message.obj;
+		    	String filename = objectReturned.toString();
+		    	Log.i("Filename", filename);
+		    	if (message.arg1 == RESULT_OK && objectReturned !=null) {
+			    	Log.i("Main Activity", "Message handler");
+			    	String fileContent = fileManager.readStringFile(activity, filename);
+			    	Log.i("Main Activity", "File content: " +fileContent);
+			    	Log.i("Main Activity", "working");
+			    	try {
+				    	//Log.i("Main Activity", "Handler working here");
+				    	JSONObject json = new JSONObject(fileContent);
+				    	Log.i("Main Activity", "Handler working here");
+				    	JSONArray imagesArray = json.getJSONArray("objects");
+				    	activity.displayData(imagesArray);
+			    	} catch (JSONException e) {
+				    	Log.e("JSON Parser", "Error parsing data [" + e.getMessage()+"] "+fileContent);
+				    	e.printStackTrace();
+			    	} catch (MalformedURLException e) {
+				    	e.printStackTrace();
+			    	}
+		    	}
+	    	}
+    	}
+    } 
+    //start intent service to get the API data, passing in the hander object
+    public void getData(Handler handler) {
+    	Log.i("Main activity", "Inside getData");
+    	Messenger messenger = new Messenger(handler);
+    	Intent getIntent = new Intent(this, ServiceClass.class);
+    	getIntent.putExtra("messenger", messenger);
+    	Log.i("Main activity", "Inside getdata2");
+    	startService(getIntent);
+    }
+    
+    public void displayData(JSONArray jsonArray) throws MalformedURLException {
+    	Log.i("Main Activity", "working1");
+    	imageView = (SmartImageView) findViewById(R.id.image_of_the_day);
+        imageView2 = (SmartImageView) findViewById(R.id.runner_up);  
+    	for (int i = 0; i < jsonArray.length(); i++) {
+    		
+    		Log.i("Main Activity", "working2");
+    		try {
+    			String url = jsonArray.getJSONObject(i).getString("image");
+    			url = url.substring(14, 20);
+    			String runnerUp = jsonArray.getJSONObject(i).getString("runnerup_1");
+    			runnerUp = runnerUp.substring(14, 20);
+    			//http://www.astrobin.com/%@/0/rawthumb/hd/
+    			url = "http://www.astrobin.com/"+url+"/0/rawthumb/hd/";
+    			runnerUp = "http://www.astrobin.com/"+runnerUp+"/0/rawthumb/hd/";
+    			imageView.setImageUrl(url);
+    			imageView2.setImageUrl(runnerUp);
+    			
+    			//String title = jsonArray.getJSONObject(i).getString("title");
+    			//String user = jsonArray.getJSONObject(i).getString("user");
+    			//String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
+    			//camera = camera.replace("[", "");
+    			//camera = camera.replace("]", "");
+    			//camera = camera.replace("\"", "");
+    			//String hd = jsonArray.getJSONObject(i).getString("url_hd");
+
+    			//Log.i("Returned objects", title+ " " +user+" " +camera+ " " +url);
+    			//HashMap<String, Object> displayText = new HashMap<String, Object>();
+    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
+    			//displayText.put("title", title);
+    			//displayText.put("user", user);
+    			//displayText.put("imaging_cameras", camera);
+    			//displayText.put("url", url);
+    			//displayText.put("hdImage", hd);
+
+    			Log.i("Main Activity", "working3");
+    			//myData.add(displayText);
+    		} catch (JSONException e) {
+    			Log.e("Error displaying data in listview", e.getMessage().toString());
+    			e.printStackTrace();
+    		}
+    	}
+    	/*
+    	FragmentManager manager = getFragmentManager();
+    	MainFragment fragment = (MainFragment) manager.findFragmentById(R.id.main_fragment);
+    	if (fragment !=null) {
+    		//fragment.displayData(myData);
+    	} else {
+    		fragment = new MainFragment();
+    		//fragment.displayData(myData);
+    	}*/
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+    	FragmentManager fragmentManager = getFragmentManager();
+    	if (position == 0) {
+     	   Log.i("Nav Fragment", "You selected Image of the day");
+     	  //final MyHandler handler = new MyHandler(this);
+          //getData(handler); 
+     	  fragmentManager.beginTransaction()
+          .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+          .commit();
+
+        } else if (position == 1) {
+     	   Log.i("Nav Fragment", "You selected Most Recent");
+     	  //fragmentManager.beginTransaction().replace(R.id.container,
+     	  //DetailFragment.newInstance(position + 1)).commit();
+     	  Intent detailActivity = new Intent(getBaseContext(), DetailActivity.class);
+     	
+     	 startActivity(detailActivity);
+     	   
+        } else if (position == 2) {
+     	   Log.i("Nav Fragment", "You selected Search AstroBin");
+     	  // fragment = new DetailFragment();
+     	  Intent detailActivity = new Intent(getBaseContext(), DetailActivity.class);
+       	
+      	 startActivity(detailActivity);
+        } else {
+     	   Log.i("Nav Fragment", "You selected Favorites");
+     	   //fragment = new DetailFragment();
+     	  Intent detailActivity = new Intent(getBaseContext(), DetailActivity.class);
+       	
+      	 startActivity(detailActivity);
+        }
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        /*
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+                .commit();*/
     }
 
-    public void onSectionAttached(int number) {
+    @Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getData(handler);
+	}
+
+	public void onSectionAttached(int number) {
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
@@ -84,8 +254,8 @@ public class MainActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
+            //getMenuInflater().inflate(R.menu.main, menu);
+            restoreActionBar(); 
             return true;
         }
         return super.onCreateOptionsMenu(menu);

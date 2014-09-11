@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">AstroPix</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">Image Of The Day</string>
+    <string name="title_section2">Most Recent</string>
+    <string name="title_section3">Search AstroBin</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -20,5 +20,6 @@
     <string name="about">About</string>
     <string name="favorite">Favorite</string>
     <string name="share">Share</string>
+    <string name="title_section4">Favorites</string>
 
 </resources>

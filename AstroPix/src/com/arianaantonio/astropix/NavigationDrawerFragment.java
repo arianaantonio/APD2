@@ -1,16 +1,19 @@
 package com.arianaantonio.astropix;
 
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -43,7 +45,7 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * A pointer to the current callbacks instance (the Activity).
      */
-    private NavigationDrawerCallbacks mCallbacks;
+    private NavigationDrawerCallbacks mCallbacks; 
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -105,6 +107,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section1),
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
+                        getString(R.string.title_section4)
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -199,6 +202,30 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+        /*
+        Fragment fragment;
+        
+       if (mCurrentSelectedPosition == 0) {
+    	   Log.i("Nav Fragment", "You selected Image of the day");
+    	   fragment = new MainFragment();
+
+       } else if (mCurrentSelectedPosition == 1) {
+    	   Log.i("Nav Fragment", "You selected Most Recent");
+    	  
+    	   //fragment = new DetailFragment();
+       } else if (mCurrentSelectedPosition == 2) {
+    	   Log.i("Nav Fragment", "You selected Search AstroBin");
+    	   fragment = new DetailFragment();
+       } else {
+    	   Log.i("Nav Fragment", "You selected Favorites");
+    	   fragment = new DetailFragment();
+       }
+       
+       FragmentManager fragmentManager = getFragmentManager();*/
+       /*fragmentManager.beginTransaction()
+                      .replace(R.id.container, fragment)
+                      .commit();*/
+        
     }
 
     @Override
@@ -247,10 +274,10 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+        //if (item.getItemId() == R.id.action_example) {
+           // Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+           // return true;
+       // }
 
         return super.onOptionsItemSelected(item);
     }

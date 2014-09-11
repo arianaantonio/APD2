@@ -907,3 +907,12 @@ Binding(CTRL+SHIFT+ARROW_LEFT,
 
 !ENTRY com.android.ide.eclipse.adt 4 0 2014-09-10 00:40:43.468
 !MESSAGE Current file is not a match for the given config.
+
+!ENTRY org.eclipse.ui 2 2 2014-09-10 21:00:58.332
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.jst.jsp.ui, propertyPage: org.eclipse.jst.jsp.ui.propertyPage.project.validation)
+
+!ENTRY org.eclipse.ui 2 2 2014-09-10 21:00:58.342
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.html.ui, propertyPage: org.eclipse.wst.html.ui.propertyPage.project.validation)
+
+!ENTRY org.eclipse.ui 2 2 2014-09-10 21:00:58.342
+!MESSAGE Invalid property category path: ValidationPropertiesPage (bundle: org.eclipse.wst.xml.ui, propertyPage: org.eclipse.wst.xml.ui.propertyPage.project.validation)
