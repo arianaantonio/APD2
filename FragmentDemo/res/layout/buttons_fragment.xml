@@ -1,0 +1,45 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    tools:ignore="ButtonStyle">
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal" >
+        
+        <Button android:id="@+id/android_3_button"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:text="@string/android_3" />
+        
+        <Button android:id="@+id/android_8_button"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:text="@string/android_8" />
+        
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal" >
+        
+        <Button android:id="@+id/android_11_button"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:text="@string/android_11" />
+        
+        <Button android:id="@+id/android_14_button"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:text="@string/android_14" />
+        
+    </TableRow>
+
+</TableLayout>

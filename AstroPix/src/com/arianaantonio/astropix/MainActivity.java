@@ -9,6 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Fragments.DetailFragment;
+import Fragments.GridViewFragment;
+import Fragments.NavigationDrawerFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -47,7 +50,7 @@ public class MainActivity extends Activity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;    
+    private NavigationDrawerFragment mNavigationDrawerFragment; 
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -71,7 +74,10 @@ public class MainActivity extends Activity
         mTitle = getTitle();
         
         final MyHandler handler = new MyHandler(this);
-        getData(handler);
+        getData(handler); 
+        
+        //MainFragment frag = MainFragment.newInstance();
+		//getFragmentManager().beginTransaction().replace(R.id.container2, frag, MainFragment.TAG).commit();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -183,34 +189,40 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
     	FragmentManager fragmentManager = getFragmentManager();
+        
+   
+    	
     	if (position == 0) {
      	   Log.i("Nav Fragment", "You selected Image of the day");
+     	  fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
      	  //final MyHandler handler = new MyHandler(this);
           //getData(handler); 
-     	  fragmentManager.beginTransaction()
-          .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-          .commit();
+     	 // fragmentManager.beginTransaction()
+         // .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+         // .commit();
+     	 //MainFragment frag = MainFragment.newInstance();
+ 		//getFragmentManager().beginTransaction().replace(R.id.container1, frag, MainFragment.TAG).commit();
 
         } else if (position == 1) {
      	   Log.i("Nav Fragment", "You selected Most Recent");
-     	  //fragmentManager.beginTransaction().replace(R.id.container,
+     	  //fragmentManager.beginTransaction().replace(R.id.container1,
      	  //DetailFragment.newInstance(position + 1)).commit();
-     	  Intent detailActivity = new Intent(getBaseContext(), DetailActivity.class);
+     	 fragmentManager.beginTransaction().replace(R.id.container, DetailFragment.newInstance(position + 1)).commit();
      	
-     	 startActivity(detailActivity);
+     
      	   
         } else if (position == 2) {
      	   Log.i("Nav Fragment", "You selected Search AstroBin");
      	  // fragment = new DetailFragment();
-     	  Intent detailActivity = new Intent(getBaseContext(), DetailActivity.class);
+     	  fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
+     	  
        	
-      	 startActivity(detailActivity);
+      	
         } else {
      	   Log.i("Nav Fragment", "You selected Favorites");
      	   //fragment = new DetailFragment();
-     	  Intent detailActivity = new Intent(getBaseContext(), DetailActivity.class);
-       	
-      	 startActivity(detailActivity);
+     	  fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
+     	  
         }
         // update the main content by replacing fragments
         /*
@@ -223,7 +235,7 @@ public class MainActivity extends Activity
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		getData(handler);
+		getData(handler); 
 	}
 
 	public void onSectionAttached(int number) {
@@ -237,6 +249,9 @@ public class MainActivity extends Activity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+            	mTitle = getString(R.string.title_section4);
+            	break;
         }
     }
 
