@@ -258,8 +258,7 @@ public class MainActivity extends Activity
      		 fragment = new GridViewFragment();
      		 fragment.getNavItemClicked(itemClicked);
      	 }
-     	getData(handler);
-     	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+     	//getData(handler);
      	   
         } else if (position == 2) {
      	   Log.i("Nav Fragment", "You selected Search AstroBin");

@@ -52,7 +52,7 @@ public class ServiceClass extends IntentService {
 	} else if (viewMessage.equals("search")) {
 		_apiURL = "http://www.astrobin.com/api/v1/image/?title__icontains=spiral&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
 	} else {
-		_apiURL = "http://www.astrobin.com/api/v1/imageoftheday/?limit=1&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json"; 
+		_apiURL = ""; 
 	}
 	Log.i("Service Class", "API URL: " +_apiURL);
 	String content = getData(_apiURL);
