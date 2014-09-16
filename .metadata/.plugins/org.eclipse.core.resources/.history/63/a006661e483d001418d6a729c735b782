@@ -1,0 +1,90 @@
+package Fragments;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.arianaantonio.astropix.MainActivity;
+import com.arianaantonio.astropix.R;
+
+public class GridViewFragment extends Fragment {
+
+	private static final String ARG_SECTION_NUMBER = "section_number";
+	public static final String TAG = "GridviewFragment.TAG";
+	
+	public static GridViewFragment newInstance() {
+		//int sectionNumber
+		
+		GridViewFragment fragment = new GridViewFragment();
+        Bundle args = new Bundle();
+        //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    public GridViewFragment() {
+ 
+    }
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		((MainActivity) activity).onSectionAttached(getArguments().getInt(
+                ARG_SECTION_NUMBER));
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+		View view = inflater.inflate(R.layout.fragment_gridview, container, false);
+		//Bundle bundle = getArguments();
+		//Log.i("GridView", "Bundle: " +bundle);
+		//ArrayList<HashMap<String, String>> myData = (ArrayList<HashMap<String, String>>) bundle.getSerializable("passed data");
+		//Log.i("Gridview", "URL: " +myData);
+		//String url = myData.get(0).get("url");
+		//Log.i("Gridview", "URL: " +url);
+		return view;
+	}
+	
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Bundle bundle = new Bundle();
+		bundle = getArguments();
+		Log.i("GridView", "Bundle: " +bundle);
+	}
+	public void getNavItemClicked(String string) {
+		if (string != null) {
+			Log.i("GridViewFragment", "Item clicked: " +string);
+			if (string.equals("Recent")) {
+				pullMostRecent();
+			} else if (string.equals("Favorites")) {
+				pullFavorites();
+			} else {
+				pullSearch();
+			}
+		}
+		
+	}
+	public void pullFavorites() {
+		Log.i("GridViewFragment", "Pulling favorites...");
+	}
+	public void pullSearch() {
+		Log.i("GridViewFragment", "Pulling Search...");
+	}
+	public void pullMostRecent() {
+		Log.i("GridViewFragment", "Pulling Most Recent...");
+	}
+	public void getData(Bundle bundle) {
+		
+	}
+}

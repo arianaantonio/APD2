@@ -9,8 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import Fragments.DetailFragment;
 import Fragments.GridViewFragment;
+import Fragments.MainFragment;
 import Fragments.NavigationDrawerFragment;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -43,6 +43,7 @@ public class MainActivity extends Activity
 	String mFileName = "ImageFile.txt";
 	private SmartImageView imageView;
 	private SmartImageView imageView2;
+	String currentView = new String();
 
 	private static FileManager fileManager = FileManager.getInstance();
 	final MyHandler handler = new MyHandler(this);
@@ -55,14 +56,12 @@ public class MainActivity extends Activity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;   
+    private CharSequence mTitle;  
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("Main activity", "Working 1");
         setContentView(R.layout.activity_main); 
-        Log.i("Main activity", "Working 2");
         mContext = this;
         mFile = FileManager.getInstance();
         
@@ -83,7 +82,6 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        Log.i("Main activity", "Working 3");
     } 
     
     private static class MyHandler extends Handler {
@@ -97,16 +95,16 @@ public class MainActivity extends Activity
     	@Override
     	public void handleMessage(Message message) {
 	    	MainActivity activity = myActivity.get();
-	    	Log.i("Main activity", "Inside handleMessage");
+	    	
 	    	if (activity !=null) {
 		    	Object objectReturned = message.obj;
 		    	String filename = objectReturned.toString();
 		    	Log.i("Filename", filename);
 		    	if (message.arg1 == RESULT_OK && objectReturned !=null) {
-			    	Log.i("Main Activity", "Message handler");
+			    	
 			    	String fileContent = fileManager.readStringFile(activity, filename);
 			    	Log.i("Main Activity", "File content: " +fileContent);
-			    	Log.i("Main Activity", "working");
+			    	
 			    	try {
 				    	//Log.i("Main Activity", "Handler working here");
 				    	JSONObject json = new JSONObject(fileContent);
@@ -124,24 +122,67 @@ public class MainActivity extends Activity
     	}
     } 
     //start intent service to get the API data, passing in the hander object
-    public void getData(Handler handler) {
-    	Log.i("Main activity", "Inside getData");
+    public void getData(Handler handler) { 
+    	
     	Messenger messenger = new Messenger(handler);
     	Intent getIntent = new Intent(this, ServiceClass.class);
     	getIntent.putExtra("messenger", messenger);
-    	Log.i("Main activity", "Inside getdata2");
+    	if (currentView.equals("imageOfTheDay")) {
+    		getIntent.putExtra("view", "imageOfTheDay");
+    	} else if (currentView.equals("recent")) {
+    		getIntent.putExtra("view", "recent");
+    	} else if (currentView.equals("favorites")) {
+    		getIntent.putExtra("view", "favorites");
+    	} else if (currentView.equals("search")){
+    		getIntent.putExtra("view", "search");
+    	}
+    			
     	startService(getIntent);
     }
     
     public void displayData(JSONArray jsonArray) throws MalformedURLException {
-    	Log.i("Main Activity", "working1");
+    
     	imageView = (SmartImageView) findViewById(R.id.image_of_the_day);
-        imageView2 = (SmartImageView) findViewById(R.id.runner_up);  
+        imageView2 = (SmartImageView) findViewById(R.id.runner_up);
+    	HashMap<String, Object> displayText = new HashMap<String, Object>();
+    	FragmentManager manager = getFragmentManager();
     	for (int i = 0; i < jsonArray.length(); i++) {
     		
-    		Log.i("Main Activity", "working2");
     		try {
+    			if (currentView.equals("search")) {
+    				/*
+    				String url = jsonArray.getJSONObject(i).getString("url_hd");
+        			
+        			String description = jsonArray.getJSONObject(i).getString("description");
+        			Log.i("Main", "url and description: " +url+description);
+        			//http://www.astrobin.com/%@/0/rawthumb/hd/
+        		
+        			displayText.put("url", url);
+        			displayText.put("description", description);*/
+    				displayText.put("url", "www.google.com");
+        			myData.add(displayText);
+        			Bundle bundle = new Bundle();
+        			bundle.putSerializable("passed data", myData);
+        			FragmentManager fragmentManager  = getFragmentManager();
+        	    	GridViewFragment fragment = (GridViewFragment) manager.findFragmentByTag(GridViewFragment.TAG);
+        	    	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+        	    	if (fragment !=null) {
+        	    		fragment.setArguments(bundle);
+        	    		//fragment.onStart(bundle);
+        	    		//fragment.getData(bundle);
+        	    		
+        	    	} else {
+        	    		fragment = new GridViewFragment();
+        	    		fragment.setArguments(bundle);
+        	    		//fragment.getData(bundle);
+        	    		
+        	    	}
+        			
+    			} else {
+    		
+    			
     			String url = jsonArray.getJSONObject(i).getString("image");
+    			Log.i("Main", "URL: " +url);
     			url = url.substring(14, 20);
     			String runnerUp = jsonArray.getJSONObject(i).getString("runnerup_1");
     			runnerUp = runnerUp.substring(14, 20);
@@ -150,6 +191,8 @@ public class MainActivity extends Activity
     			runnerUp = "http://www.astrobin.com/"+runnerUp+"/0/rawthumb/hd/";
     			imageView.setImageUrl(url);
     			imageView2.setImageUrl(runnerUp);
+    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
+    			}
     			
     			//String title = jsonArray.getJSONObject(i).getString("title");
     			//String user = jsonArray.getJSONObject(i).getString("user");
@@ -161,15 +204,14 @@ public class MainActivity extends Activity
 
     			//Log.i("Returned objects", title+ " " +user+" " +camera+ " " +url);
     			//HashMap<String, Object> displayText = new HashMap<String, Object>();
-    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
+    			
     			//displayText.put("title", title);
     			//displayText.put("user", user);
     			//displayText.put("imaging_cameras", camera);
     			//displayText.put("url", url);
     			//displayText.put("hdImage", hd);
 
-    			Log.i("Main Activity", "working3");
-    			//myData.add(displayText);
+    			//myData.add(displayText);*/
     		} catch (JSONException e) {
     			Log.e("Error displaying data in listview", e.getMessage().toString());
     			e.printStackTrace();
@@ -189,53 +231,92 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
     	FragmentManager fragmentManager = getFragmentManager();
-        
-   
+        String itemClicked = new String("");
+        GridViewFragment fragment = (GridViewFragment) fragmentManager.findFragmentByTag(GridViewFragment.TAG);
+    	MainFragment fragmentMain = (MainFragment) fragmentManager.findFragmentByTag(MainFragment.TAG);
     	
     	if (position == 0) {
      	   Log.i("Nav Fragment", "You selected Image of the day");
-     	  fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
-     	  //final MyHandler handler = new MyHandler(this);
-          //getData(handler); 
-     	 // fragmentManager.beginTransaction()
-         // .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-         // .commit();
-     	 //MainFragment frag = MainFragment.newInstance();
- 		//getFragmentManager().beginTransaction().replace(R.id.container1, frag, MainFragment.TAG).commit();
-
+     	  //fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
+     	 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(position + 1)).commit();
+     	  itemClicked = "imageOfTheDay";
+     	 currentView = "imageOfTheDay";
+     	if (fragmentMain !=null) {
+    	 } else {
+    		 fragmentMain = new MainFragment();
+    	 }
+    	getData(handler);
+     	  
         } else if (position == 1) {
      	   Log.i("Nav Fragment", "You selected Most Recent");
-     	  //fragmentManager.beginTransaction().replace(R.id.container1,
-     	  //DetailFragment.newInstance(position + 1)).commit();
-     	 fragmentManager.beginTransaction().replace(R.id.container, DetailFragment.newInstance(position + 1)).commit();
-     	
-     
+     	 // fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
+     	  itemClicked = "Recent";
+     	  currentView = "recent";
+     	 if (fragment !=null) {
+     		 fragment.getNavItemClicked(itemClicked);
+     	 } else {
+     		 fragment = new GridViewFragment();
+     		 fragment.getNavItemClicked(itemClicked);
+     	 }
+     	//getData(handler);
      	   
         } else if (position == 2) {
      	   Log.i("Nav Fragment", "You selected Search AstroBin");
-     	  // fragment = new DetailFragment();
-     	  fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
+     	   //fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
+     	  itemClicked = "Search";
+     	  currentView = "search";
+     	 HashMap<String, Object> displayText = new HashMap<String, Object>();
+     	 displayText.put("url", "www.google.com");
+			myData.add(displayText);
+			Bundle bundle = new Bundle();
+			bundle.putString("test", "value");
+			//bundle.putSerializable("passed data", myData);
+			//FragmentManager fragmentManager  = getFragmentManager();
+			GridViewFragment fragment1 = new GridViewFragment();
+	    	//GridViewFragment fragment = (GridViewFragment) manager.findFragmentByTag(GridViewFragment.TAG);
+	    	//fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+	    	if (fragment1 !=null) {
+	    		fragment1.setArguments(bundle);
+	    		//fragment.onStart(bundle);
+	    		fragment1.getData(bundle);
+	    		
+	    	} //else {
+	    		//fragment1 = new GridViewFragment();
+	    		//fragment1.setArguments(bundle);
+	    		//fragment.getData(bundle);
+	    		
+	    	//}
+	    	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
      	  
-       	
+     	 //if (fragment !=null) {
+     		// fragment.getNavItemClicked(itemClicked);
+     	// } else {
+     		// fragment = new GridViewFragment();
+     		// fragment.getNavItemClicked(itemClicked);
+     	// }
+     	//getData(handler);
+     	 
       	
         } else {
      	   Log.i("Nav Fragment", "You selected Favorites");
-     	   //fragment = new DetailFragment();
-     	  fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
-     	  
+     	//   fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
+     	  itemClicked = "Favorites";
+     	  currentView = "favorites";
+     	 if (fragment !=null) {
+     		 fragment.getNavItemClicked(itemClicked);
+     	 } else {
+     		 fragment = new GridViewFragment();
+     		 fragment.getNavItemClicked(itemClicked);
+     	 }
         }
-        // update the main content by replacing fragments
-        /*
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();*/
+    	//getData(handler);
     }
 
     @Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		getData(handler); 
+		//getData(handler); 
 	}
 
 	public void onSectionAttached(int number) {
@@ -317,6 +398,7 @@ public class MainActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+          
             return rootView;
         }
 
