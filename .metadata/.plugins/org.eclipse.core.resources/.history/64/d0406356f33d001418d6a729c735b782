@@ -7,16 +7,14 @@ public class ImageObject {
 	private String description;
 	private String telescope;
 	private String websiteUrl;
-	private String title;
 	
-	public ImageObject(String url, String username, String camera, String description, String telescope, String websiteUrl, String title) {
+	public ImageObject(String url, String username, String camera, String description, String telescope, String websiteUrl) {
 		this.camera = camera; 
 		this.description = description;
 		this.telescope = telescope;
 		this.url = url;
 		this.username = username;
 		this.websiteUrl = websiteUrl;
-		this.title = title;
 	}
 	public String getUrl() {
 		return url;
@@ -53,12 +51,6 @@ public class ImageObject {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
 	}
 }
 

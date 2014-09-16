@@ -144,31 +144,33 @@ public class MainActivity extends Activity
     		
     		try {
     			if (currentView.equals("search")) {
-   
-    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
-    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
-    				String username = jsonArray.getJSONObject(i).getString("user");
-    				String description = jsonArray.getJSONObject(i).getString("description");
-    				String title = jsonArray.getJSONObject(i).getString("title");
+    				/*
+    				String url = jsonArray.getJSONObject(i).getString("url_hd");
+        			
+        			String description = jsonArray.getJSONObject(i).getString("description");
         			Log.i("Main", "url and description: " +url+description);
         			//http://www.astrobin.com/%@/0/rawthumb/hd/
         		
         			displayText.put("url", url);
-        			displayText.put("description", description);
-    				displayText.put("camera", camera);
-    				displayText.put("telescope", telescope);
-    				displayText.put("username", username);
-    				displayText.put("title", title);
-    				
+        			displayText.put("description", description);*/
+    				displayText.put("url", "www.google.com");
         			myData.add(displayText);
         			Bundle bundle = new Bundle();
         			bundle.putSerializable("passed data", myData);
-        			
-        	    	GridViewFragment fragment = new GridViewFragment();
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
-        	    	fragment.setArguments(bundle);
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+        			FragmentManager fragmentManager  = getFragmentManager();
+        	    	GridViewFragment fragment = (GridViewFragment) manager.findFragmentByTag(GridViewFragment.TAG);
+        	    	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+        	    	if (fragment !=null) {
+        	    		fragment.setArguments(bundle);
+        	    		//fragment.onStart(bundle);
+        	    		//fragment.getData(bundle);
+        	    		
+        	    	} else {
+        	    		fragment = new GridViewFragment();
+        	    		fragment.setArguments(bundle);
+        	    		//fragment.getData(bundle);
+        	    		
+        	    	}
         			
     			} else {
     		

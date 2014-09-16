@@ -3004,3 +3004,6 @@ java.lang.IllegalArgumentException: Argument not valid
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:629)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
+
+!ENTRY org.eclipse.ui 4 4 2014-09-16 14:34:22.369
+!MESSAGE Referenced part does not exist yet: org.eclipse.ui.views.ProblemView.

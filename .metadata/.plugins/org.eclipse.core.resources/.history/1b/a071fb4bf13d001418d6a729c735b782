@@ -2,7 +2,6 @@ package com.arianaantonio.astropix;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -13,7 +12,7 @@ import android.widget.BaseAdapter;
 
 import com.loopj.android.image.SmartImageView;
 
-@SuppressLint("InflateParams") public class CustomBaseAdapter extends BaseAdapter {
+public class CustomBaseAdapter extends BaseAdapter {
 	Context context;
 	List<ImageObject> imageItems;
 	
@@ -61,7 +60,9 @@ import com.loopj.android.image.SmartImageView;
 			//holder.imageView = (SmartImageView) convertView.findViewById(R.id.smartimage);
 		}
 		ImageObject image = (ImageObject) getItem(position);
+		Log.i("Base adapter", "Working5");
 		holder.imageView.setImageUrl(image.getUrl());
+		Log.i("Base adapter", "Working6");
 		
 		return convertView;
 	}

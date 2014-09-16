@@ -64,14 +64,20 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main); 
         mContext = this;
         mFile = FileManager.getInstance();
+        
+        //imageView = (SmartImageView) findViewById(R.id.image_of_the_day);
+        //imageView2 = (SmartImageView) findViewById(R.id.runner_up);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         
         final MyHandler handler = new MyHandler(this);
-        getData(handler);
+        getData(handler); 
         
+        //MainFragment frag = MainFragment.newInstance();
+		//getFragmentManager().beginTransaction().replace(R.id.container2, frag, MainFragment.TAG).commit();
+
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
@@ -144,31 +150,33 @@ public class MainActivity extends Activity
     		
     		try {
     			if (currentView.equals("search")) {
-   
-    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
-    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
-    				String username = jsonArray.getJSONObject(i).getString("user");
-    				String description = jsonArray.getJSONObject(i).getString("description");
-    				String title = jsonArray.getJSONObject(i).getString("title");
+    				/*
+    				String url = jsonArray.getJSONObject(i).getString("url_hd");
+        			
+        			String description = jsonArray.getJSONObject(i).getString("description");
         			Log.i("Main", "url and description: " +url+description);
         			//http://www.astrobin.com/%@/0/rawthumb/hd/
         		
         			displayText.put("url", url);
-        			displayText.put("description", description);
-    				displayText.put("camera", camera);
-    				displayText.put("telescope", telescope);
-    				displayText.put("username", username);
-    				displayText.put("title", title);
-    				
+        			displayText.put("description", description);*/
+    				displayText.put("url", "www.google.com");
         			myData.add(displayText);
         			Bundle bundle = new Bundle();
         			bundle.putSerializable("passed data", myData);
-        			
-        	    	GridViewFragment fragment = new GridViewFragment();
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
-        	    	fragment.setArguments(bundle);
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+        			FragmentManager fragmentManager  = getFragmentManager();
+        	    	GridViewFragment fragment = (GridViewFragment) manager.findFragmentByTag(GridViewFragment.TAG);
+        	    	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+        	    	if (fragment !=null) {
+        	    		fragment.setArguments(bundle);
+        	    		//fragment.onStart(bundle);
+        	    		//fragment.getData(bundle);
+        	    		
+        	    	} else {
+        	    		fragment = new GridViewFragment();
+        	    		fragment.setArguments(bundle);
+        	    		//fragment.getData(bundle);
+        	    		
+        	    	}
         			
     			} else {
     		
@@ -254,21 +262,40 @@ public class MainActivity extends Activity
      	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
      	   
         } else if (position == 2) {
-        	Log.i("Nav Fragment", "You selected Search AstroBin");
+     	   Log.i("Nav Fragment", "You selected Search AstroBin");
+     	   //fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
      	  itemClicked = "Search";
      	  currentView = "search";
-     	  /*
-     	  HashMap<String, Object> displayText = new HashMap<String, Object>();
-     	  displayText.put("url", "www.google.com");
-		  myData.add(displayText);
-		  Bundle bundle = new Bundle();
-		  bundle.putString("test", "value");
-		  GridViewFragment fragment1 = new GridViewFragment();
-		  fragment1.setArguments(bundle);
-		  fragment1.getData(bundle);
-		  fragmentManager.beginTransaction().replace(R.id.container, fragment1).commit();
-     	  */
-		  getData(handler);
+     	 HashMap<String, Object> displayText = new HashMap<String, Object>();
+     	 displayText.put("url", "www.google.com");
+			myData.add(displayText);
+			Bundle bundle = new Bundle();
+			bundle.putString("test", "value");
+			//bundle.putSerializable("passed data", myData);
+			//FragmentManager fragmentManager  = getFragmentManager();
+			GridViewFragment fragment1 = new GridViewFragment();
+	    	//GridViewFragment fragment = (GridViewFragment) manager.findFragmentByTag(GridViewFragment.TAG);
+	    	//fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+	    	//if (fragment1 !=null) {
+	    		fragment1.setArguments(bundle);
+	    		//fragment.onStart(bundle);
+	    		fragment1.getData(bundle);
+	    		
+	    	//} //else {
+	    		//fragment1 = new GridViewFragment();
+	    		//fragment1.setArguments(bundle);
+	    		//fragment.getData(bundle);
+	    		
+	    	//}
+	    	fragmentManager.beginTransaction().replace(R.id.container, fragment1).commit();
+     	  
+     	 //if (fragment !=null) {
+     		// fragment.getNavItemClicked(itemClicked);
+     	// } else {
+     		// fragment = new GridViewFragment();
+     		// fragment.getNavItemClicked(itemClicked);
+     	// }
+     	//getData(handler);
      	 
       	
         } else {

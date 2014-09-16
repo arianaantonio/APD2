@@ -9,8 +9,12 @@
     android:numColumns="auto_fit"
     android:verticalSpacing="10dp"
     android:horizontalSpacing="10dp"
-    android:stretchMode="columnWidth"
-    android:background="@drawable/background" >
+    android:stretchMode="columnWidth" >
+    	<com.loopj.android.image.SmartImageView
+       android:id="@+id/smartimage1"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:visibility="visible" />
     
 
 </GridView>

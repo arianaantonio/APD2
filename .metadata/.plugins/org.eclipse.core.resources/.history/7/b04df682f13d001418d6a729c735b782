@@ -99,7 +99,7 @@ public class MainFragment extends Fragment {
 		//imageView = (SmartImageView) getView().findViewById(R.id.image_of_the_day);
 		if (data !=null) {
 			Log.i("Main Fragment", "Before imageView");
-				test =  new String("string");  
+				test =  new String("string"); 
 				Log.i("Test", "test: " +test);
 				//test = "string";
 				//ArrayList<HashMap<String, ?>> data = new ArrayList<HashMap<String, ?>>(); 

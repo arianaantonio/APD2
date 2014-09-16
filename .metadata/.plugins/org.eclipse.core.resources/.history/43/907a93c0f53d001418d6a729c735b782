@@ -165,10 +165,11 @@ public class MainActivity extends Activity
         			Bundle bundle = new Bundle();
         			bundle.putSerializable("passed data", myData);
         			
+        			FragmentManager fragmentManager  = getFragmentManager();
         	    	GridViewFragment fragment = new GridViewFragment();
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+        	    	fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
         	    	fragment.setArguments(bundle);
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+        	    	fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
         			
     			} else {
     		

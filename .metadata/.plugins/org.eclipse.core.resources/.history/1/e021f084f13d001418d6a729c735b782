@@ -63,20 +63,26 @@ public class GridViewFragment extends Fragment {
 		Bundle bundle = getArguments();
 		Log.i("GridView", "Bundle: " +bundle);
 		imageView = (SmartImageView) view.findViewById(R.id.smartimage);
-		
+		//ArrayList<HashMap<String, String>> myData = (ArrayList<HashMap<String, String>>) bundle.getSerializable("passed data");
+		//Log.i("Gridview", "URL: " +myData);
+		//String url = myData.get(0).get("url");
+		//Log.i("Gridview", "URL: " +url);
 		
 		
 		imageItems = new ArrayList<ImageObject>();
 		
 		for (int i = 0;i <images.length; i++) {
-			ImageObject item = new ImageObject(images[i], "user", "camera", "description", "telescope", "website", "title");
+			ImageObject item = new ImageObject(images[i], "user", "camera", "description", "telescope", "website");
 			imageItems.add(item);
 			
 		}
 		
 		gridView = (GridView) view.findViewById(R.id.grid); 
 		CustomBaseAdapter adapter = new CustomBaseAdapter(getActivity(), imageItems);
+		Log.i("GridView", "Working5");
 		gridView.setAdapter(adapter);
+		Log.i("GridView", "Working6");
+		
 		
 		return view;
 	}

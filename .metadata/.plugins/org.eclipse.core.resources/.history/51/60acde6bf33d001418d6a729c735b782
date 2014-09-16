@@ -69,7 +69,7 @@ public class GridViewFragment extends Fragment {
 		imageItems = new ArrayList<ImageObject>();
 		
 		for (int i = 0;i <images.length; i++) {
-			ImageObject item = new ImageObject(images[i], "user", "camera", "description", "telescope", "website", "title");
+			ImageObject item = new ImageObject(images[i], "user", "camera", "description", "telescope", "website");
 			imageItems.add(item);
 			
 		}
