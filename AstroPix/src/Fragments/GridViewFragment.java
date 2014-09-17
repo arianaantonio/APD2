@@ -1,6 +1,7 @@
 package Fragments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,16 +24,17 @@ public class GridViewFragment extends Fragment {
 	public static SmartImageView imageView;
 	private static final String ARG_SECTION_NUMBER = "section_number";
 	public static final String TAG = "GridviewFragment.TAG";
-	public static final String[] images = new String[] {
-		"http://cdn.astrobin.com/images/thumbs/420012d7840e16cc292fc8101b3a9aa2.250x200_q80_crop-smart.jpg",
-		"http://cdn.astrobin.com/images/thumbs/206d85ef5d583561a28674d553a0ddfb.250x200_q80_crop-smart.jpg",
-		"http://cdn.astrobin.com/images/thumbs/5cb72778586e8859f655b0406cbb6ab5.250x200_q80_crop-smart.jpg",
-		"http://cdn.astrobin.com/images/thumbs/15a82925c23d123d617fb81c5604d260.250x200_q80_crop-smart.jpg",
-		"http://cdn.astrobin.com/images/thumbs/2ff676a933daccad01d9de393ae4b221.250x200_q80_crop-smart.jpg",
-		"http://cdn.astrobin.com/images/thumbs/4fa45eb494d90bd8db89e73d2133230e.250x200_q80_crop-smart.jpg"};
+	//public static final String[] images = new String[] {
+		//"http://cdn.astrobin.com/images/thumbs/420012d7840e16cc292fc8101b3a9aa2.250x200_q80_crop-smart.jpg",
+		//"http://cdn.astrobin.com/images/thumbs/206d85ef5d583561a28674d553a0ddfb.250x200_q80_crop-smart.jpg",
+		//"http://cdn.astrobin.com/images/thumbs/5cb72778586e8859f655b0406cbb6ab5.250x200_q80_crop-smart.jpg",
+		//"http://cdn.astrobin.com/images/thumbs/15a82925c23d123d617fb81c5604d260.250x200_q80_crop-smart.jpg",
+		//"http://cdn.astrobin.com/images/thumbs/2ff676a933daccad01d9de393ae4b221.250x200_q80_crop-smart.jpg",
+		//"http://cdn.astrobin.com/images/thumbs/4fa45eb494d90bd8db89e73d2133230e.250x200_q80_crop-smart.jpg"};
 	
 	GridView gridView;
 	List<ImageObject> imageItems;
+	
 	
 	public static GridViewFragment newInstance() {
 		//int sectionNumber
@@ -61,23 +63,36 @@ public class GridViewFragment extends Fragment {
 		
 		View view = inflater.inflate(R.layout.fragment_gridview, container, false);
 		Bundle bundle = getArguments();
-		Log.i("GridView", "Bundle: " +bundle);
-		imageView = (SmartImageView) view.findViewById(R.id.smartimage);
+		//String[] images = new String[]{};
+		ArrayList<String> images = new ArrayList<String>();
 		
-		
+				
+		ArrayList<HashMap<String, String>> data1 = (ArrayList<HashMap<String, String>>)bundle.getSerializable("passed data");
+		//data = bundle.getSerializable("data");
+		for (int i = 0; i < data1.size(); i++) {
+			images.add(data1.get(i).get("url"));
+			//Log.i("Gridview", "URL: " +text);
+		}
+		//Log.i("Gridview", "URL: " +text);
+		//Log.i("Gridview", "Data: " +data1);
+		 
+		gridView = (GridView) view.findViewById(R.id.grid);
 		
 		imageItems = new ArrayList<ImageObject>();
+		imageItems.clear();
 		
-		for (int i = 0;i <images.length; i++) {
-			ImageObject item = new ImageObject(images[i], "user", "camera", "description", "telescope", "website", "title");
+		
+		for (int i = 0;i <images.size(); i++) {
+			ImageObject item = new ImageObject(images.get(i), "user", "camera", "description", "telescope", "website", "title");
 			imageItems.add(item);
 			
 		}
 		
-		gridView = (GridView) view.findViewById(R.id.grid); 
+		 
 		CustomBaseAdapter adapter = new CustomBaseAdapter(getActivity(), imageItems);
+		adapter.notifyDataSetChanged();
 		gridView.setAdapter(adapter);
-		
+		//imageItems.clear();
 		return view;
 	}
 	
@@ -85,33 +100,13 @@ public class GridViewFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		//Bundle bundle = getArguments();
-		//Log.i("GridView", "Bundle: " +bundle);
-		/*
-		Log.i("GridView", "Working1");
-		imageItems = new ArrayList<ImageObject>();
-		Log.i("GridView", "Working2");
-		for (int i = 0;i <images.length; i++) {
-			ImageObject item = new ImageObject(images[i], "user", "camera", "description", "telescope", "website");
-			imageItems.add(item);
-			Log.i("GridView", "Working3");
-		}
-		
-		gridView = (GridView) getActivity().findViewById(R.id.grid);
-		Log.i("GridView", "Working4");
-		CustomBaseAdapter adapter = new CustomBaseAdapter(getActivity(), imageItems);
-		Log.i("GridView", "Working5");
-		gridView.setAdapter(adapter);
-		Log.i("GridView", "Working6");*/
 		
 	}
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Bundle bundle = new Bundle();
-		bundle = getArguments();
-		Log.i("GridView", "Bundle: " +bundle.getString("test"));
+	
 	}
 	public void getNavItemClicked(String string) {
 		if (string != null) {

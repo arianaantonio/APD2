@@ -52,7 +52,7 @@ import com.loopj.android.image.SmartImageView;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.grid_image, null);
+			convertView = inflater.inflate(R.layout.grid_image, null);  
 			holder = new ViewHolder();
 			holder.imageView = (SmartImageView) convertView.findViewById(R.id.smartimage);
 			convertView.setTag(holder);
@@ -60,7 +60,7 @@ import com.loopj.android.image.SmartImageView;
 			holder = (ViewHolder) convertView.getTag();
 			//holder.imageView = (SmartImageView) convertView.findViewById(R.id.smartimage);
 		}
-		ImageObject image = (ImageObject) getItem(position);
+		ImageObject image = (ImageObject) getItem(position);  
 		holder.imageView.setImageUrl(image.getUrl());
 		
 		return convertView;

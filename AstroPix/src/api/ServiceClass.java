@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.IntentService;
@@ -51,12 +54,27 @@ public class ServiceClass extends IntentService {
 		_apiURL = "http://www.astrobin.com/api/v1/imageoftheday/?limit=1&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
 	} else if (viewMessage.equals("search")) {
 		_apiURL = "http://www.astrobin.com/api/v1/image/?title__icontains=spiral&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
-	} else {
-		_apiURL = "http://www.astrobin.com/api/v1/imageoftheday/?limit=1&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json"; 
+	} else if (viewMessage.equals("recent")) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String newDate = dateFormat.format(date);
+		
+		newDate = newDate.replace(" ", "%2");
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		String yesterdaysDate = dateFormat.format(cal.getTime());
+		yesterdaysDate = yesterdaysDate.replace(" ", "%2");
+		System.out.println("Yesterday's date = "+ yesterdaysDate);
+		System.out.println(newDate); 
+		_apiURL = "http://www.astrobin.com/api/v1/image/?uploaded__gte=" +yesterdaysDate+ "&uploaded__lt=" +newDate+ "&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
 	}
+	else {
+		_apiURL = "http://www.astrobin.com/api/v1/imageoftheday/?limit=1&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json"; 
+	} 
 	Log.i("Service Class", "API URL: " +_apiURL);
 	String content = getData(_apiURL);
-	Log.i("Service Class", content);
+	Log.i("Service Class", "Content" +content);
 	
 	FileManager fileManager = FileManager.getInstance();
 	fileManager.writeStringFile(context, filename, content);

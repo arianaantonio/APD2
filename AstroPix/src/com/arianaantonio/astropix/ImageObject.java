@@ -58,7 +58,7 @@ public class ImageObject {
 		return title;
 	}
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = title; 
 	}
 }
 

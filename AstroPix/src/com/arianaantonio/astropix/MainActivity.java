@@ -138,12 +138,14 @@ public class MainActivity extends Activity
     
     	imageView = (SmartImageView) findViewById(R.id.image_of_the_day);
         imageView2 = (SmartImageView) findViewById(R.id.runner_up);
-    	HashMap<String, Object> displayText = new HashMap<String, Object>();
+  
     	FragmentManager manager = getFragmentManager();
+    	myData.clear();
+    	
     	for (int i = 0; i < jsonArray.length(); i++) {
     		
     		try {
-    			if (currentView.equals("search")) {
+    			if (currentView.equals("search") || currentView.equals("recent")) {
    
     				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
     				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
@@ -151,9 +153,10 @@ public class MainActivity extends Activity
     				String username = jsonArray.getJSONObject(i).getString("user");
     				String description = jsonArray.getJSONObject(i).getString("description");
     				String title = jsonArray.getJSONObject(i).getString("title");
-        			Log.i("Main", "url and description: " +url+description);
+        			//Log.i("Main", "url and description: " +url+description);
         			//http://www.astrobin.com/%@/0/rawthumb/hd/
         		
+        			HashMap<String, Object> displayText = new HashMap<String, Object>();
         			displayText.put("url", url);
         			displayText.put("description", description);
     				displayText.put("camera", camera);
@@ -166,7 +169,7 @@ public class MainActivity extends Activity
         			bundle.putSerializable("passed data", myData);
         			
         	    	GridViewFragment fragment = new GridViewFragment();
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+        	    	//manager.beginTransaction().replace(R.id.container, fragment).commit();
         	    	fragment.setArguments(bundle);
         	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
         			
@@ -209,15 +212,6 @@ public class MainActivity extends Activity
     			e.printStackTrace();
     		}
     	}
-    	/*
-    	FragmentManager manager = getFragmentManager();
-    	MainFragment fragment = (MainFragment) manager.findFragmentById(R.id.main_fragment);
-    	if (fragment !=null) {
-    		//fragment.displayData(myData);
-    	} else {
-    		fragment = new MainFragment();
-    		//fragment.displayData(myData);
-    	}*/
     }
 
     @Override
@@ -240,42 +234,24 @@ public class MainActivity extends Activity
     	getData(handler);
      	  
         } else if (position == 1) {
-     	   Log.i("Nav Fragment", "You selected Most Recent");
-     	 // fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
-     	  itemClicked = "Recent";
-     	  currentView = "recent";
-     	 if (fragment !=null) {
-     		 fragment.getNavItemClicked(itemClicked);
-     	 } else {
-     		 fragment = new GridViewFragment();
-     		 fragment.getNavItemClicked(itemClicked);
-     	 }
-     	getData(handler);
-     	fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance()).commit();
+        	Log.i("Nav Fragment", "You selected Most Recent");
+        	itemClicked = "Recent";
+        	currentView = "recent";
+        	mTitle = getString(R.string.title_section2);
+        	
+        	getData(handler);
      	   
         } else if (position == 2) {
         	Log.i("Nav Fragment", "You selected Search AstroBin");
-     	  itemClicked = "Search";
-     	  currentView = "search";
-     	  /*
-     	  HashMap<String, Object> displayText = new HashMap<String, Object>();
-     	  displayText.put("url", "www.google.com");
-		  myData.add(displayText);
-		  Bundle bundle = new Bundle();
-		  bundle.putString("test", "value");
-		  GridViewFragment fragment1 = new GridViewFragment();
-		  fragment1.setArguments(bundle);
-		  fragment1.getData(bundle);
-		  fragmentManager.beginTransaction().replace(R.id.container, fragment1).commit();
-     	  */
-		  getData(handler);
-     	 
+        	itemClicked = "Search";
+        	currentView = "search";
+        	mTitle = getString(R.string.title_section3);
+        	getData(handler);
       	
         } else {
      	   Log.i("Nav Fragment", "You selected Favorites");
-     	//   fragmentManager.beginTransaction().replace(R.id.container, GridViewFragment.newInstance(position + 1)).commit();
-     	  itemClicked = "Favorites";
-     	  currentView = "favorites";
+     	   itemClicked = "Favorites";
+     	   currentView = "favorites";
      	 if (fragment !=null) {
      		 fragment.getNavItemClicked(itemClicked);
      	 } else {

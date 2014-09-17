@@ -21,5 +21,9 @@
     <string name="favorite">Favorite</string>
     <string name="share">Share</string>
     <string name="title_section4">Favorites</string>
+    <color name="darkgrey">#202020</color>
+    <color name="pink">#FF3399</color>
+    <color name="purple">#7F00FF</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>
