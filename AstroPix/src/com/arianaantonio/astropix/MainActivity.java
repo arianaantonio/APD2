@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Fragments.DetailFragment;
 import Fragments.GridViewFragment;
 import Fragments.MainFragment;
 import Fragments.NavigationDrawerFragment;
@@ -32,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 import api.FileManager;
 import api.ServiceClass;
 
@@ -40,7 +40,7 @@ import com.loopj.android.image.SmartImageView;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFragment.ParentListener {
 	
 	Context mContext;
 	FileManager mFile;
@@ -211,23 +211,24 @@ public class MainActivity extends Activity
 	        			
 	    			} else if (currentView.equals("search")) {
 	    				HashMap<String, Object> displayText = new HashMap<String, Object>();
-	    			
-		    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
-		    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-		    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
-		    				String username = jsonArray.getJSONObject(i).getString("user");
-		    				String description = jsonArray.getJSONObject(i).getString("description");
-		    				String title = jsonArray.getJSONObject(i).getString("title");
-		        			//Log.i("Main", "url and description: " +url+description);
-		        			//http://www.astrobin.com/%@/0/rawthumb/hd/
-		        		
-		        			
-		        			displayText.put("url", url);
-		        			displayText.put("description", description);
-		    				displayText.put("camera", camera);
-		    				displayText.put("telescope", telescope);
-		    				displayText.put("username", username);
-		    				displayText.put("title", title);
+
+	    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
+	    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
+	    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
+	    				String username = jsonArray.getJSONObject(i).getString("user");
+	    				String description = jsonArray.getJSONObject(i).getString("description");
+	    				String title = jsonArray.getJSONObject(i).getString("title");
+	    				String website = url.substring(24, 29);
+	    				//http://www.astrobin.com/%@/0/rawthumb/hd/
+
+
+	    				displayText.put("url", url);
+	    				displayText.put("description", description);
+	    				displayText.put("camera", camera);
+	    				displayText.put("telescope", telescope);
+	    				displayText.put("username", username);
+	    				displayText.put("title", title);
+	    				displayText.put("website", website);
 	    				
 	        			myData.add(displayText);
 	        			Bundle bundle = new Bundle();
@@ -253,25 +254,6 @@ public class MainActivity extends Activity
 	    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
 	    			}
     			
-    			
-    			//String title = jsonArray.getJSONObject(i).getString("title");
-    			//String user = jsonArray.getJSONObject(i).getString("user");
-    			//String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-    			//camera = camera.replace("[", "");
-    			//camera = camera.replace("]", "");
-    			//camera = camera.replace("\"", "");
-    			//String hd = jsonArray.getJSONObject(i).getString("url_hd");
-
-    			//Log.i("Returned objects", title+ " " +user+" " +camera+ " " +url);
-    			//HashMap<String, Object> displayText = new HashMap<String, Object>();
-    			
-    			//displayText.put("title", title);
-    			//displayText.put("user", user);
-    			//displayText.put("imaging_cameras", camera);
-    			//displayText.put("url", url);
-    			//displayText.put("hdImage", hd);
-
-    			//myData.add(displayText);*/
     		} catch (JSONException e) {
     			Log.e("Error displaying data in listview", e.getMessage().toString());
     			e.printStackTrace();
@@ -454,5 +436,18 @@ public class MainActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+	@Override
+	public void passBackClickedItem(HashMap<String, ?> item) {
+		Log.i("Main Activity", "Passed over: " +item);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("clicked data", item);
+		FragmentManager manager = getFragmentManager();
+		Log.i("Main Activity", "Passing over: " +bundle);
+		DetailFragment fragment = new DetailFragment();
+		fragment.setArguments(bundle);
+		
+		manager.beginTransaction().replace(R.id.container, fragment).commit();
+		
+	}
 
 }
