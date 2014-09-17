@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Context;
@@ -36,7 +37,7 @@ public class ServiceClass extends IntentService {
 		
 	}
 
-	@Override
+	@SuppressLint("SimpleDateFormat") @Override
 	//handle the service intent to get the data from the API and pass it to MainActivity
 	protected void onHandleIntent(Intent intent) {
 		
@@ -49,12 +50,16 @@ public class ServiceClass extends IntentService {
 	message.obj = filename;
 	Log.i("Service Class", filename);
 	String viewMessage = (String) extra.get(MESSENGER_VIEW_KEY);
+	//String viewMessenger = (String) extra.get(MESSENGER_KEY);
 	Log.i("Service Class", "Message: " +viewMessage);
+	
 	if (viewMessage.equals("imageOfTheDay")) {
 		_apiURL = "http://www.astrobin.com/api/v1/imageoftheday/?limit=1&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
-	} else if (viewMessage.equals("search")) {
+	} 
+	else if (viewMessage.equals("search")) {
 		_apiURL = "http://www.astrobin.com/api/v1/image/?title__icontains=spiral&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
-	} else if (viewMessage.equals("recent")) {
+	} 
+	else if (viewMessage.equals("recent")) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String newDate = dateFormat.format(date);
@@ -70,10 +75,15 @@ public class ServiceClass extends IntentService {
 		_apiURL = "http://www.astrobin.com/api/v1/image/?uploaded__gte=" +yesterdaysDate+ "&uploaded__lt=" +newDate+ "&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
 	}
 	else {
-		_apiURL = "http://www.astrobin.com/api/v1/imageoftheday/?limit=1&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json"; 
+		Log.i("Service Class", "---------QUERY PASSED-----------" +viewMessage);
+		viewMessage = viewMessage.replace(" ", "+");
+		_apiURL = "http://www.astrobin.com/api/v1/image/?title__icontains=" +viewMessage+ "&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json"; 
 	} 
 	Log.i("Service Class", "API URL: " +_apiURL);
 	String content = getData(_apiURL);
+	if (content == null) {
+		Log.i("Service Class", "No data");
+	}
 	Log.i("Service Class", "Content" +content);
 	
 	FileManager fileManager = FileManager.getInstance();

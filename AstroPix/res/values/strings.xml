@@ -25,5 +25,7 @@
     <color name="pink">#FF3399</color>
     <color name="purple">#7F00FF</color>
     <color name="white">#FFFFFF</color>
+    <string name="search_title">Search AstroBin</string>
+    <string name="search_hint">Crab Nebula</string>
 
 </resources>

@@ -12,10 +12,12 @@ import org.json.JSONObject;
 import Fragments.GridViewFragment;
 import Fragments.MainFragment;
 import Fragments.NavigationDrawerFragment;
+import Fragments.SearchFragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +31,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.Toast;
 import api.FileManager;
 import api.ServiceClass;
 
@@ -44,6 +48,7 @@ public class MainActivity extends Activity
 	private SmartImageView imageView;
 	private SmartImageView imageView2;
 	String currentView = new String();
+	String query;
 
 	private static FileManager fileManager = FileManager.getInstance();
 	final MyHandler handler = new MyHandler(this);
@@ -69,15 +74,29 @@ public class MainActivity extends Activity
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         
-        final MyHandler handler = new MyHandler(this);
-        getData(handler);
+        //handleSearchIntent(getIntent());
+/*
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("search_value");
+            Log.i("Main Activity", "Search value: " +value);
+            query = value;
+            currentView = "search";*/
+        //} //else {
+        	getData(handler);
+       // }
+        
+        //final MyHandler handler = new MyHandler(this);
+       
+        //getData(handler);
+   
         
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     } 
-    
+
     private static class MyHandler extends Handler {
     
     	private final WeakReference<MainActivity> myActivity;
@@ -105,6 +124,7 @@ public class MainActivity extends Activity
 				    	Log.i("Main Activity", "Handler working here");
 				    	JSONArray imagesArray = json.getJSONArray("objects");
 				    	activity.displayData(imagesArray);
+	
 			    	} catch (JSONException e) {
 				    	Log.e("JSON Parser", "Error parsing data [" + e.getMessage()+"] "+fileContent);
 				    	e.printStackTrace();
@@ -128,9 +148,10 @@ public class MainActivity extends Activity
     	} else if (currentView.equals("favorites")) {
     		getIntent.putExtra("view", "favorites");
     	} else if (currentView.equals("search")){
-    		getIntent.putExtra("view", "search");
+    		getIntent.putExtra("view", query);
+    	} else {
+    		getIntent.putExtra("view", "imageOfTheDay");
     	}
-    			
     	startService(getIntent);
     }
     
@@ -141,53 +162,97 @@ public class MainActivity extends Activity
   
     	FragmentManager manager = getFragmentManager();
     	myData.clear();
+    	Log.i("Test", "test " +jsonArray);
+    	
+		if (jsonArray.length() == 0) {
+			HashMap<String, Object> displayText = new HashMap<String, Object>();
+			String url = "null";
+			displayText.put("url", url);
+			myData.add(displayText);
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("passed data", myData);
+			
+	    	SearchFragment fragment = new SearchFragment();
+	    	fragment.setArguments(bundle);
+	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+		}
     	
     	for (int i = 0; i < jsonArray.length(); i++) {
     		
-    		try {
-    			if (currentView.equals("search") || currentView.equals("recent")) {
-   
-    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
-    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
-    				String username = jsonArray.getJSONObject(i).getString("user");
-    				String description = jsonArray.getJSONObject(i).getString("description");
-    				String title = jsonArray.getJSONObject(i).getString("title");
-        			//Log.i("Main", "url and description: " +url+description);
-        			//http://www.astrobin.com/%@/0/rawthumb/hd/
-        		
-        			HashMap<String, Object> displayText = new HashMap<String, Object>();
-        			displayText.put("url", url);
-        			displayText.put("description", description);
-    				displayText.put("camera", camera);
-    				displayText.put("telescope", telescope);
-    				displayText.put("username", username);
-    				displayText.put("title", title);
-    				
-        			myData.add(displayText);
-        			Bundle bundle = new Bundle();
-        			bundle.putSerializable("passed data", myData);
-        			
-        	    	GridViewFragment fragment = new GridViewFragment();
-        	    	//manager.beginTransaction().replace(R.id.container, fragment).commit();
-        	    	fragment.setArguments(bundle);
-        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
-        			
-    			} else {
     		
+    		try {
+   
+	    			if (currentView.equals("recent")) {
+	    				HashMap<String, Object> displayText = new HashMap<String, Object>();
+	    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
+	    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
+	    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
+	    				String username = jsonArray.getJSONObject(i).getString("user");
+	    				String description = jsonArray.getJSONObject(i).getString("description");
+	    				String title = jsonArray.getJSONObject(i).getString("title");
+	        			//Log.i("Main", "url and description: " +url+description);
+	        			//http://www.astrobin.com/%@/0/rawthumb/hd/
+	        		
+	        			//HashMap<String, Object> displayText = new HashMap<String, Object>();
+	        			displayText.put("url", url);
+	        			displayText.put("description", description);
+	    				displayText.put("camera", camera);
+	    				displayText.put("telescope", telescope);
+	    				displayText.put("username", username);
+	    				displayText.put("title", title);
+	    				
+	        			myData.add(displayText);
+	        			Bundle bundle = new Bundle();
+	        			bundle.putSerializable("passed data", myData);
+	        			
+	        	    	GridViewFragment fragment = new GridViewFragment();
+	        	    	fragment.setArguments(bundle);
+	        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+	        			
+	    			} else if (currentView.equals("search")) {
+	    				HashMap<String, Object> displayText = new HashMap<String, Object>();
+	    			
+		    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
+		    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
+		    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
+		    				String username = jsonArray.getJSONObject(i).getString("user");
+		    				String description = jsonArray.getJSONObject(i).getString("description");
+		    				String title = jsonArray.getJSONObject(i).getString("title");
+		        			//Log.i("Main", "url and description: " +url+description);
+		        			//http://www.astrobin.com/%@/0/rawthumb/hd/
+		        		
+		        			
+		        			displayText.put("url", url);
+		        			displayText.put("description", description);
+		    				displayText.put("camera", camera);
+		    				displayText.put("telescope", telescope);
+		    				displayText.put("username", username);
+		    				displayText.put("title", title);
+	    				
+	        			myData.add(displayText);
+	        			Bundle bundle = new Bundle();
+	        			bundle.putSerializable("passed data", myData);
+	        			
+	        	    	SearchFragment fragment = new SearchFragment();
+	        	    	fragment.setArguments(bundle);
+	        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
+	    			}
+	    			else {
+	    		
+	    			
+	    			String url = jsonArray.getJSONObject(i).getString("image");
+	    			Log.i("Main", "URL: " +url);
+	    			url = url.substring(14, 20);
+	    			String runnerUp = jsonArray.getJSONObject(i).getString("runnerup_1");
+	    			runnerUp = runnerUp.substring(14, 20);
+	    			//http://www.astrobin.com/%@/0/rawthumb/hd/
+	    			url = "http://www.astrobin.com/"+url+"/0/rawthumb/hd/";
+	    			runnerUp = "http://www.astrobin.com/"+runnerUp+"/0/rawthumb/hd/";
+	    			imageView.setImageUrl(url);
+	    			imageView2.setImageUrl(runnerUp);
+	    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
+	    			}
     			
-    			String url = jsonArray.getJSONObject(i).getString("image");
-    			Log.i("Main", "URL: " +url);
-    			url = url.substring(14, 20);
-    			String runnerUp = jsonArray.getJSONObject(i).getString("runnerup_1");
-    			runnerUp = runnerUp.substring(14, 20);
-    			//http://www.astrobin.com/%@/0/rawthumb/hd/
-    			url = "http://www.astrobin.com/"+url+"/0/rawthumb/hd/";
-    			runnerUp = "http://www.astrobin.com/"+runnerUp+"/0/rawthumb/hd/";
-    			imageView.setImageUrl(url);
-    			imageView2.setImageUrl(runnerUp);
-    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
-    			}
     			
     			//String title = jsonArray.getJSONObject(i).getString("title");
     			//String user = jsonArray.getJSONObject(i).getString("user");
@@ -213,12 +278,29 @@ public class MainActivity extends Activity
     		}
     	}
     }
+    
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+    	
+        handleSearchIntent(intent);
+    }
+
+    private void handleSearchIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            query = intent.getStringExtra(SearchManager.QUERY);
+            Log.i("Main Activity", "Searched: " +query);
+            getData(handler);
+        }
+    }
+
+    
     @Override
     public void onNavigationDrawerItemSelected(int position) {
     	FragmentManager fragmentManager = getFragmentManager();
         String itemClicked = new String("");
-        GridViewFragment fragment = (GridViewFragment) fragmentManager.findFragmentByTag(GridViewFragment.TAG);
+        
     	MainFragment fragmentMain = (MainFragment) fragmentManager.findFragmentByTag(MainFragment.TAG);
     	
     	if (position == 0) {
@@ -246,20 +328,19 @@ public class MainActivity extends Activity
         	itemClicked = "Search";
         	currentView = "search";
         	mTitle = getString(R.string.title_section3);
-        	getData(handler);
+        	SearchFragment sFrag = new SearchFragment();
+       	    fragmentManager.beginTransaction().replace(R.id.container, sFrag).commit();
+        	//getData(handler);
       	
         } else {
      	   Log.i("Nav Fragment", "You selected Favorites");
      	   itemClicked = "Favorites";
      	   currentView = "favorites";
-     	 if (fragment !=null) {
-     		 fragment.getNavItemClicked(itemClicked);
-     	 } else {
-     		 fragment = new GridViewFragment();
-     		 fragment.getNavItemClicked(itemClicked);
-     	 }
+     	  mTitle = getString(R.string.title_section4);
+     	   SearchFragment sFrag = new SearchFragment();
+     	  fragmentManager.beginTransaction().replace(R.id.container, sFrag).commit();
+     	 
         }
-    	//getData(handler);
     }
 
     @Override
@@ -295,13 +376,27 @@ public class MainActivity extends Activity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { 
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            //getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar(); 
+        	if (currentView.equals("search")) {
+        		getMenuInflater().inflate(R.menu.options_menu, menu);
+        		
+        		SearchManager searchManager =
+        		           (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        		    SearchView searchView =
+        		            (SearchView) menu.findItem(R.id.search).getActionView();
+        		    
+        		    searchView.setSearchableInfo(
+        		            searchManager.getSearchableInfo(getComponentName()));
+        		    //ComponentName cn = new ComponentName(this, SearchActivity.class);
+        		    //searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+
+        		
+        	}
+        	restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
