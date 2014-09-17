@@ -36,19 +36,16 @@ import android.widget.SearchView;
 import api.FileManager;
 import api.ServiceClass;
 
-import com.loopj.android.image.SmartImageView;
-
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFragment.ParentListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFragment.ParentListener, GridViewFragment.ParentListener, MainFragment.ParentListener {
 	
 	Context mContext;
 	FileManager mFile;
 	String mFileName = "ImageFile.txt";
-	private SmartImageView imageView;
-	private SmartImageView imageView2;
-	String currentView = new String();
+	static String currentView = new String();
 	String query;
+	String mainImageClicked;
 
 	private static FileManager fileManager = FileManager.getInstance();
 	final MyHandler handler = new MyHandler(this);
@@ -71,30 +68,15 @@ public class MainActivity extends Activity
         mFile = FileManager.getInstance();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        		getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-        
-        //handleSearchIntent(getIntent());
-/*
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("search_value");
-            Log.i("Main Activity", "Search value: " +value);
-            query = value;
-            currentView = "search";*/
-        //} //else {
-        	getData(handler);
-       // }
-        
-        //final MyHandler handler = new MyHandler(this);
-       
-        //getData(handler);
-   
-        
+
+        getData(handler);
+
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        		R.id.navigation_drawer,
+        		(DrawerLayout) findViewById(R.id.drawer_layout));
     } 
 
     private static class MyHandler extends Handler {
@@ -119,11 +101,16 @@ public class MainActivity extends Activity
 			    	Log.i("Main Activity", "File content: " +fileContent);
 			    	
 			    	try {
-				    	//Log.i("Main Activity", "Handler working here");
-				    	JSONObject json = new JSONObject(fileContent);
+			    		JSONObject json = new JSONObject(fileContent);
+			    	
 				    	Log.i("Main Activity", "Handler working here");
-				    	JSONArray imagesArray = json.getJSONArray("objects");
-				    	activity.displayData(imagesArray);
+				    	if (currentView.equals("detail")) {
+				    		activity.displayMainData(json);
+				    	} else {
+				    		JSONArray imagesArray = json.getJSONArray("objects");
+				    		activity.displayData(imagesArray);
+				    	}
+				    	//activity.displayData(imagesArray);
 	
 			    	} catch (JSONException e) {
 				    	Log.e("JSON Parser", "Error parsing data [" + e.getMessage()+"] "+fileContent);
@@ -141,6 +128,7 @@ public class MainActivity extends Activity
     	Messenger messenger = new Messenger(handler);
     	Intent getIntent = new Intent(this, ServiceClass.class);
     	getIntent.putExtra("messenger", messenger);
+    	
     	if (currentView.equals("imageOfTheDay")) {
     		getIntent.putExtra("view", "imageOfTheDay");
     	} else if (currentView.equals("recent")) {
@@ -149,20 +137,51 @@ public class MainActivity extends Activity
     		getIntent.putExtra("view", "favorites");
     	} else if (currentView.equals("search")){
     		getIntent.putExtra("view", query);
+    	} else if (currentView.equals("detail")) {
+    		getIntent.putExtra("view" , mainImageClicked);
     	} else {
     		getIntent.putExtra("view", "imageOfTheDay");
     	}
     	startService(getIntent);
     }
     
-    public void displayData(JSONArray jsonArray) throws MalformedURLException {
+    public void displayMainData(JSONObject json) {
+    	try {
+    		HashMap<String, Object> displayText = new HashMap<String, Object>();
+			String url = json.getString("url_duckduckgo");
+			String camera = json.getString("imaging_cameras");
+			String telescope = json.getString("imaging_telescopes");
+			String username = json.getString("user");
+			String description = json.getString("description");
+			String title = json.getString("title");
+
+			displayText.put("url", url);
+			displayText.put("description", description);
+			displayText.put("camera", camera);
+			displayText.put("telescope", telescope);
+			displayText.put("username", username);
+			displayText.put("title", title);
+
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("clicked data", displayText);
+			
+			FragmentManager manager = getFragmentManager();
+			DetailFragment fragment = new DetailFragment();
+			fragment.setArguments(bundle);
+			manager.beginTransaction().replace(R.id.container, fragment).commit();
+
+			
+			
+		} catch (JSONException e) {
+			
+			e.printStackTrace();
+		}
+    }
     
-    	imageView = (SmartImageView) findViewById(R.id.image_of_the_day);
-        imageView2 = (SmartImageView) findViewById(R.id.runner_up);
+    public void displayData(JSONArray jsonArray) throws MalformedURLException {
   
     	FragmentManager manager = getFragmentManager();
     	myData.clear();
-    	Log.i("Test", "test " +jsonArray);
     	
 		if (jsonArray.length() == 0) {
 			HashMap<String, Object> displayText = new HashMap<String, Object>();
@@ -172,88 +191,97 @@ public class MainActivity extends Activity
 			Bundle bundle = new Bundle();
 			bundle.putSerializable("passed data", myData);
 			
+			mTitle = getString(R.string.title_section5);
+			restoreActionBar();
+			
 	    	SearchFragment fragment = new SearchFragment();
 	    	fragment.setArguments(bundle);
 	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
 		}
     	
     	for (int i = 0; i < jsonArray.length(); i++) {
-    		
-    		
+
     		try {
-   
-	    			if (currentView.equals("recent")) {
-	    				HashMap<String, Object> displayText = new HashMap<String, Object>();
-	    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
-	    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-	    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
-	    				String username = jsonArray.getJSONObject(i).getString("user");
-	    				String description = jsonArray.getJSONObject(i).getString("description");
-	    				String title = jsonArray.getJSONObject(i).getString("title");
-	        			//Log.i("Main", "url and description: " +url+description);
-	        			//http://www.astrobin.com/%@/0/rawthumb/hd/
-	        		
-	        			//HashMap<String, Object> displayText = new HashMap<String, Object>();
-	        			displayText.put("url", url);
-	        			displayText.put("description", description);
-	    				displayText.put("camera", camera);
-	    				displayText.put("telescope", telescope);
-	    				displayText.put("username", username);
-	    				displayText.put("title", title);
-	    				
-	        			myData.add(displayText);
-	        			Bundle bundle = new Bundle();
-	        			bundle.putSerializable("passed data", myData);
-	        			
-	        	    	GridViewFragment fragment = new GridViewFragment();
-	        	    	fragment.setArguments(bundle);
-	        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
-	        			
-	    			} else if (currentView.equals("search")) {
-	    				HashMap<String, Object> displayText = new HashMap<String, Object>();
 
-	    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
-	    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
-	    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
-	    				String username = jsonArray.getJSONObject(i).getString("user");
-	    				String description = jsonArray.getJSONObject(i).getString("description");
-	    				String title = jsonArray.getJSONObject(i).getString("title");
-	    				String website = url.substring(24, 29);
-	    				//http://www.astrobin.com/%@/0/rawthumb/hd/
+    			if (currentView.equals("recent")) {
+    				
+    				HashMap<String, Object> displayText = new HashMap<String, Object>();
+    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
+    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
+    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
+    				String username = jsonArray.getJSONObject(i).getString("user");
+    				String description = jsonArray.getJSONObject(i).getString("description");
+    				String title = jsonArray.getJSONObject(i).getString("title");
 
+    				displayText.put("url", url);
+    				displayText.put("description", description);
+    				displayText.put("camera", camera);
+    				displayText.put("telescope", telescope);
+    				displayText.put("username", username);
+    				displayText.put("title", title);
 
-	    				displayText.put("url", url);
-	    				displayText.put("description", description);
-	    				displayText.put("camera", camera);
-	    				displayText.put("telescope", telescope);
-	    				displayText.put("username", username);
-	    				displayText.put("title", title);
-	    				displayText.put("website", website);
-	    				
-	        			myData.add(displayText);
-	        			Bundle bundle = new Bundle();
-	        			bundle.putSerializable("passed data", myData);
-	        			
-	        	    	SearchFragment fragment = new SearchFragment();
-	        	    	fragment.setArguments(bundle);
-	        	    	manager.beginTransaction().replace(R.id.container, fragment).commit();
-	    			}
-	    			else {
-	    		
-	    			
-	    			String url = jsonArray.getJSONObject(i).getString("image");
-	    			Log.i("Main", "URL: " +url);
-	    			url = url.substring(14, 20);
-	    			String runnerUp = jsonArray.getJSONObject(i).getString("runnerup_1");
-	    			runnerUp = runnerUp.substring(14, 20);
-	    			//http://www.astrobin.com/%@/0/rawthumb/hd/
-	    			url = "http://www.astrobin.com/"+url+"/0/rawthumb/hd/";
-	    			runnerUp = "http://www.astrobin.com/"+runnerUp+"/0/rawthumb/hd/";
-	    			imageView.setImageUrl(url);
-	    			imageView2.setImageUrl(runnerUp);
-	    			Log.i("Main Activity", "url: " +url+ " runner up: " + runnerUp);
-	    			}
-    			
+    				myData.add(displayText);
+    				Bundle bundle = new Bundle();
+    				bundle.putSerializable("passed data", myData);
+
+    				GridViewFragment fragment = new GridViewFragment();
+    				fragment.setArguments(bundle);
+    				manager.beginTransaction().replace(R.id.container, fragment).commit();
+
+    			} else if (currentView.equals("search")) {
+    				
+    				HashMap<String, Object> displayText = new HashMap<String, Object>();
+
+    				String url = jsonArray.getJSONObject(i).getString("url_duckduckgo");
+    				String camera = jsonArray.getJSONObject(i).getString("imaging_cameras");
+    				String telescope = jsonArray.getJSONObject(i).getString("imaging_telescopes");
+    				String username = jsonArray.getJSONObject(i).getString("user");
+    				String description = jsonArray.getJSONObject(i).getString("description");
+    				String title = jsonArray.getJSONObject(i).getString("title");
+    				String website = url.substring(24, 29);
+
+    				displayText.put("url", url);
+    				displayText.put("description", description);
+    				displayText.put("camera", camera);
+    				displayText.put("telescope", telescope);
+    				displayText.put("username", username);
+    				displayText.put("title", title);
+    				displayText.put("website", website);
+
+    				myData.add(displayText);
+    				Bundle bundle = new Bundle();
+    				bundle.putSerializable("passed data", myData);
+
+    				SearchFragment fragment = new SearchFragment();
+    				fragment.setArguments(bundle);
+    				manager.beginTransaction().replace(R.id.container, fragment).commit();
+    			}
+    			else {
+    				HashMap<String, Object> displayText = new HashMap<String, Object>();
+    				
+    				String url = jsonArray.getJSONObject(i).getString("image");
+    				url = url.substring(14, 20);
+    				String runnerUp = jsonArray.getJSONObject(i).getString("runnerup_1");
+    				runnerUp = runnerUp.substring(14, 20);
+    				
+    				//http://www.astrobin.com/%@/0/rawthumb/hd/
+    				url = "http://www.astrobin.com/"+url+"/0/rawthumb/hd/";
+    				runnerUp = "http://www.astrobin.com/"+runnerUp+"/0/rawthumb/hd/";
+    				displayText.put("url", url);
+    				displayText.put("runnerUp", runnerUp);
+    				myData.add(displayText);
+    				Bundle bundle = new Bundle();
+    				bundle.putSerializable("passed data", myData);
+
+    				MainFragment fragment = new MainFragment();
+    				fragment.setArguments(bundle);
+    				manager.beginTransaction().replace(R.id.container, fragment).commit();
+    				
+    				//imageView.setImageUrl(url);
+    				//imageView2.setImageUrl(runnerUp);
+    				;
+    			}
+
     		} catch (JSONException e) {
     			Log.e("Error displaying data in listview", e.getMessage().toString());
     			e.printStackTrace();
@@ -281,25 +309,20 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
     	FragmentManager fragmentManager = getFragmentManager();
-        String itemClicked = new String("");
         
-    	MainFragment fragmentMain = (MainFragment) fragmentManager.findFragmentByTag(MainFragment.TAG);
+        
+    	
     	
     	if (position == 0) {
-     	   Log.i("Nav Fragment", "You selected Image of the day");
-     	  //fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
-     	 fragmentManager.beginTransaction().replace(R.id.container, MainFragment.newInstance(position + 1)).commit();
-     	  itemClicked = "imageOfTheDay";
-     	 currentView = "imageOfTheDay";
-     	if (fragmentMain !=null) {
-    	 } else {
-    		 fragmentMain = new MainFragment();
-    	 }
-    	getData(handler);
+    		Log.i("Nav Fragment", "You selected Image of the day");
+    		//MainFragment fragmentMain = new MainFragment();
+    		//fragmentManager.beginTransaction().replace(R.id.container, fragmentMain).commit();
+
+    		currentView = "imageOfTheDay";
+    		getData(handler);
      	  
         } else if (position == 1) {
         	Log.i("Nav Fragment", "You selected Most Recent");
-        	itemClicked = "Recent";
         	currentView = "recent";
         	mTitle = getString(R.string.title_section2);
         	
@@ -307,29 +330,26 @@ public class MainActivity extends Activity
      	   
         } else if (position == 2) {
         	Log.i("Nav Fragment", "You selected Search AstroBin");
-        	itemClicked = "Search";
+     
         	currentView = "search";
         	mTitle = getString(R.string.title_section3);
         	SearchFragment sFrag = new SearchFragment();
        	    fragmentManager.beginTransaction().replace(R.id.container, sFrag).commit();
-        	//getData(handler);
       	
         } else {
      	   Log.i("Nav Fragment", "You selected Favorites");
-     	   itemClicked = "Favorites";
      	   currentView = "favorites";
-     	  mTitle = getString(R.string.title_section4);
+     	   mTitle = getString(R.string.title_section4);
      	   SearchFragment sFrag = new SearchFragment();
-     	  fragmentManager.beginTransaction().replace(R.id.container, sFrag).commit();
+     	   fragmentManager.beginTransaction().replace(R.id.container, sFrag).commit();
      	 
         }
     }
 
     @Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		//getData(handler); 
+		
+		super.onResume(); 
 	}
 
 	public void onSectionAttached(int number) {
@@ -438,15 +458,27 @@ public class MainActivity extends Activity
     }
 	@Override
 	public void passBackClickedItem(HashMap<String, ?> item) {
-		Log.i("Main Activity", "Passed over: " +item);
+		//Log.i("Main Activity", "Passed over: " +item);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("clicked data", item);
+		
+		mTitle = getString(R.string.title_section5);
+		restoreActionBar();
+		
 		FragmentManager manager = getFragmentManager();
-		Log.i("Main Activity", "Passing over: " +bundle);
 		DetailFragment fragment = new DetailFragment();
 		fragment.setArguments(bundle);
-		
 		manager.beginTransaction().replace(R.id.container, fragment).commit();
+		
+	}
+
+	@Override
+	public void passBackClickedItemMain(String item) {
+		Log.i("Main Activity", "Passed image: " +item);
+		item = item.substring(24, 30);
+		mainImageClicked = "detail" +item;
+		currentView = "detail";
+		getData(handler);
 		
 	}
 

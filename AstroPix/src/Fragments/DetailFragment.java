@@ -31,7 +31,7 @@ public class DetailFragment extends Fragment {
     }
 	@Override
 	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
+		
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(getArguments().getInt(
                 ARG_SECTION_NUMBER));
@@ -45,8 +45,10 @@ public class DetailFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_detail, container, false);
 		Bundle bundle = getArguments();
 		
+		@SuppressWarnings("unchecked")
 		HashMap<String, String> data = (HashMap<String, String>)bundle.getSerializable("clicked data");
 		Log.i("Detail Fragment", "Passed data: " +data);
+		
 		
 		return view;
 	}

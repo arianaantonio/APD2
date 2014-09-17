@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.net.sip.SipAudioCall.Listener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,16 +48,16 @@ public class SearchFragment extends Fragment {
 		//((MainActivity) activity).onSectionAttached(getArguments().getInt(
                // ARG_SECTION_NUMBER));
 		try {
-			listener = (ParentListener) activity;
+				listener = (ParentListener) activity;
 			} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + "class does not implement fragment interface");
+				throw new ClassCastException(activity.toString() + "class does not implement fragment interface");
 			}
 	}
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		
 	}
@@ -122,7 +121,6 @@ public class SearchFragment extends Fragment {
 						int position, long id) {
 					
 					HashMap<String, ?> selectedListItem = data1.get(position);
-					String clicked =  imageItems.get(position).getTitle();
 					Log.i("Search Fragment", "Clicked: " +selectedListItem);
 					listener.passBackClickedItem(selectedListItem);
 					

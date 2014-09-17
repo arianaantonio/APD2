@@ -1,0 +1,160 @@
+package Fragments;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import Fragments.SearchFragment.ParentListener;
+import android.app.Activity;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View; 
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.AdapterView.OnItemClickListener;
+
+import com.arianaantonio.astropix.CustomBaseAdapter;
+import com.arianaantonio.astropix.ImageObject;
+import com.arianaantonio.astropix.MainActivity;
+import com.arianaantonio.astropix.R;
+
+public class GridViewFragment extends Fragment {
+
+	private static final String ARG_SECTION_NUMBER = "section_number";
+	public static final String TAG = "GridviewFragment.TAG";
+	ArrayList<HashMap<String, String>> data1 = new ArrayList<HashMap<String, String>>();
+	
+	GridView gridView;
+	List<ImageObject> imageItems;
+	private ParentListener listener;
+	public interface ParentListener {
+		void passBackClickedItem(HashMap<String, ?> item);
+		
+	}
+	
+	
+	public static GridViewFragment newInstance(int sectionNumber) {
+		
+		GridViewFragment fragment = new GridViewFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
+        return fragment;
+    }
+   
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		((MainActivity) activity).onSectionAttached(getArguments().getInt(
+                ARG_SECTION_NUMBER));
+		try {
+			listener = (ParentListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + "class does not implement fragment interface");
+		}
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+		View view = inflater.inflate(R.layout.fragment_gridview, container, false);
+		Bundle bundle = getArguments();
+		ArrayList<String> images = new ArrayList<String>();
+		ArrayList<String> titles = new ArrayList<String>();
+		ArrayList<String> cameras = new ArrayList<String>();
+		ArrayList<String> telescopes = new ArrayList<String>();
+		ArrayList<String> websites = new ArrayList<String>();
+		ArrayList<String> descriptions = new ArrayList<String>();
+		ArrayList<String> users = new ArrayList<String>();
+		
+		if (bundle !=null) {
+		    data1 = (ArrayList<HashMap<String, String>>)bundle.getSerializable("passed data");
+			
+			for (int i = 0; i < data1.size(); i++) {
+				images.add(data1.get(i).get("url"));
+				titles.add(data1.get(i).get("title"));
+				cameras.add(data1.get(i).get("camera"));
+				telescopes.add(data1.get(i).get("telescope"));
+				websites.add(data1.get(i).get("website"));
+				descriptions.add(data1.get(i).get("description"));
+				users.add(data1.get(i).get("username"));
+				
+			}
+			
+			 
+			gridView = (GridView) view.findViewById(R.id.grid);
+			
+			imageItems = new ArrayList<ImageObject>();
+			imageItems.clear();
+			
+			for (int i = 0;i <images.size(); i++) {
+				ImageObject item = new ImageObject(images.get(i), users.get(i), cameras.get(i), descriptions.get(i), telescopes.get(i), websites.get(i), titles.get(i));
+				imageItems.add(item);
+				
+			}
+			 
+			CustomBaseAdapter adapter = new CustomBaseAdapter(getActivity(), imageItems);
+			adapter.notifyDataSetChanged();
+			gridView.setAdapter(adapter);
+			gridView.setOnItemClickListener(new OnItemClickListener() {
+	
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					
+					HashMap<String, ?> selectedListItem = data1.get(position);
+					String clicked =  imageItems.get(position).getTitle();
+					Log.i("Search Fragment", "Clicked: " +selectedListItem);
+					listener.passBackClickedItem(selectedListItem);
+					
+				}
+				
+			});
+		}
+		return view;
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+	}
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+	
+	}
+	public void getNavItemClicked(String string) {
+		if (string != null) {
+			Log.i("GridViewFragment", "Item clicked: " +string);
+			if (string.equals("Recent")) {
+				pullMostRecent();
+			} else if (string.equals("Favorites")) {
+				pullFavorites();
+			} else {
+				pullSearch();
+			}
+		}
+		
+	}
+	public void pullFavorites() {
+		Log.i("GridViewFragment", "Pulling favorites...");
+	}
+	public void pullSearch() {
+		Log.i("GridViewFragment", "Pulling Search...");
+	}
+	public void pullMostRecent() {
+		Log.i("GridViewFragment", "Pulling Most Recent...");
+	}
+	public void getData(Bundle bundle) {
+		Log.i("GridView", "Second bundle: " +bundle);
+	}
+}
