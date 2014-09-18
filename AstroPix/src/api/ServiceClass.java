@@ -11,10 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.IntentService;
@@ -68,13 +64,15 @@ import android.util.Log;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String newDate = dateFormat.format(date);
-		newDate = newDate.replace(" ", "%2");
+		newDate = newDate.replace(" ", "%20");
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -1);
 		String yesterdaysDate = dateFormat.format(cal.getTime());
-		yesterdaysDate = yesterdaysDate.replace(" ", "%2"); 
+		yesterdaysDate = yesterdaysDate.replace(" ", "%20");
+		Log.i("Service Class", "Today's Date: " +newDate);
 		
+		//_apiURL = "http://www.astrobin.com/api/v1/image/?uploaded__gte=2014-09-17%2018:32:28&uploaded__lt=2014-09-18%2018:32:28&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
 		_apiURL = "http://www.astrobin.com/api/v1/image/?uploaded__gte=" +yesterdaysDate+ "&uploaded__lt=" +newDate+ "&api_key=e5ca219df4572fd4f187f3e6c4192e24af7e78f8&api_secret=5d4bf7b7097eed09a878af19a475fb879a36b916&format=json";
 	} else if (viewMessage.toLowerCase().contains(detail.toLowerCase())) {
 		viewMessage = viewMessage.substring(6);

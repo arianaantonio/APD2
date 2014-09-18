@@ -58,8 +58,8 @@ public class FileManager {
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			File file = context.getFileStreamPath(filename);
 			int filesize = (int) file.length();
-			byte[] contentBytes = new byte[50000];
-			//byte[] contentBytes = new byte[filesize];
+			//byte[] contentBytes = new byte[50000];
+			byte[] contentBytes = new byte[filesize];
 			int bytesRead = 0;
 			StringBuffer contentBuffer = new StringBuffer();
 			

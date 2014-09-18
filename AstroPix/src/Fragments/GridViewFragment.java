@@ -94,7 +94,7 @@ public class GridViewFragment extends Fragment {
 			for (int i = 0;i <images.size(); i++) {
 				ImageObject item = new ImageObject(images.get(i), users.get(i), cameras.get(i), descriptions.get(i), telescopes.get(i), websites.get(i), titles.get(i));
 				imageItems.add(item);
-			}
+			} 
 			 
 			CustomBaseAdapter adapter = new CustomBaseAdapter(getActivity(), imageItems);
 			adapter.notifyDataSetChanged();

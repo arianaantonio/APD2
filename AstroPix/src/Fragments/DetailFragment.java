@@ -1,14 +1,16 @@
 package Fragments;
 
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.io.*;
+
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -19,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.arianaantonio.astropix.ImageObject;
+
 import com.arianaantonio.astropix.MainActivity;
 import com.arianaantonio.astropix.R;
 
@@ -47,6 +49,7 @@ public class DetailFragment extends Fragment {
                 ARG_SECTION_NUMBER));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -55,7 +58,6 @@ public class DetailFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_detail, container, false);
 		Bundle bundle = getArguments();
 		
-		@SuppressWarnings("unchecked") 
 		HashMap<String, String> data = (HashMap<String, String>)bundle.getSerializable("clicked data");
 		Log.i("Detail Fragment", "Passed data: " +data);
 		//ArrayList<HashMap<String, String>> data1 = (ArrayList<HashMap<String, String>>)bundle.getSerializable("clicked data");
@@ -68,8 +70,8 @@ public class DetailFragment extends Fragment {
 		String users = data.get("username");
 		HashMap<String, String> displayText = new HashMap<String, String>();
 		
-		HashMap<String, HashMap> newText = new HashMap<String, HashMap>();
-		newText.put("image", data);
+		//HashMap<String, HashMap> newText = new HashMap<String, HashMap>();
+		//newText.put("image", data);
 		
 		displayText.put("url", images);
 		displayText.put("title", titles);
@@ -91,84 +93,67 @@ public class DetailFragment extends Fragment {
 			users.add(data1.get(i).get("username"));
 			
 		}*/
-		Log.i("Detail Fragment", "Working2");
-		ImageObject item = null;
-		HashMap<String, Object> image = new HashMap<String, Object>();
-		image.put("image", item);
+		//Log.i("Detail Fragment", "Working2");
+		//ImageObject item = null;
+		//HashMap<String, Object> image = new HashMap<String, Object>();
+		//image.put("image", item);
 		/*
 		for (int i = 0;i <images.size(); i++) {
 			item = new ImageObject(images.get(i), users.get(i), cameras.get(i), descriptions.get(i), telescopes.get(i), websites.get(i), titles.get(i));
 			//imageItems.add(item);
 		}*/
 		ArrayList<HashMap<String, ?>> myData = new ArrayList<HashMap<String, ?>>();
-		myData.add(newText);
-		String[] stringa = null;
-		item = new ImageObject(images, users, cameras, descriptions, telescopes, websites, titles);
-		Log.i("Detail Fragment", "Working3");
-		BufferedWriter writer = null;
-		try {
-			String filePath = getActivity().getFilesDir().getPath().toString() + "/FavoritesFile.txt";
-			//File file = new File("/FavoritesFile.ser"); 
-			File file = new File(filePath);
-			//System.out.println(file.getCanonicalPath());
-			//file.delete(); 
-			writer = new BufferedWriter(new FileWriter(file, true));
-			//HashMap<String, String> saveData = (HashMap<String, String>) data+ "\n";
-			/*
-			//FileOutputStream fileOut = new FileOutputStream("/FavoritesFile.ser", true);
-			FileOutputStream fileOut = new FileOutputStream(file);
-			FileInputStream fis = new FileInputStream(filePath);
-			Log.i("test", "file length: " +file.length());
-			Log.i("test", "file size avail: " +file.getUsableSpace());
-			Log.i("test", "file size total: " +file.getTotalSpace());
-			
-			ObjectOutputStream out = null;
-			int b = fis.read();  
-			if (b == -1) {
-				Log.i("test", "empty");
-			} else {
-				Log.i("test", "not empty");
-			}
-			if (file.length() == 0) { 
-				out = new ObjectOutputStream(fileOut);
-				Log.i("Detail Fragment", "Inside do not append");
-				
-			} else {
-				out = new AppendingObjectOutputStream(fileOut);
-				Log.i("Detail Fragment", "Inside Append");
-			}
-			out.writeObject(image);
-	        out.close();
-	        fileOut.close();*/
-			String lineTitle = newText.get("image").toString()+ "\n*#$";
-			writer.write(lineTitle);
-			Toast.makeText(getActivity(), "Website saved as bookmark", Toast.LENGTH_LONG).show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		myData.add(displayText);
+		
+		ArrayList<HashMap<String, String>> appendData = new ArrayList<HashMap<String, String>>();
+		String filePath = getActivity().getFilesDir().getPath().toString() + "/FavoritesFile.ser";
+		File file = new File(filePath);
+
+
+		FileInputStream fileIn;
+		ObjectInputStream in;
+		
+		if (file.exists()) {
 			try {
-				writer.close();
+				fileIn = new FileInputStream(filePath);
+				in = new ObjectInputStream(fileIn);
+				appendData = (ArrayList<HashMap<String,String>>) in.readObject();
+				in.close();
+				fileIn.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (StreamCorruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		Log.i("Detail Fragment", "Read data:" +appendData);
+		
+		for (int i = 0; i < appendData.size(); i++) {
+			myData.add(appendData.get(i));
+		}
+		Log.i("Detail Fragment", "New Data: " +myData);
+
+		try {
+			
+			FileOutputStream fileOut = new FileOutputStream(file);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(myData);
+	        out.close();
+	        fileOut.close();
+			Toast.makeText(getActivity(), "Image saved as favorite", Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 		
 		
 		return view;
 	}
-	public class AppendingObjectOutputStream extends ObjectOutputStream {
-
-		  public AppendingObjectOutputStream(OutputStream out) throws IOException {
-		    super(out);
-		  }
-
-		  @Override
-		  protected void writeStreamHeader() throws IOException {
-		    // do not write a header, but reset:
-		    // this line added after another question
-		    // showed a problem with the original
-		    reset();
-		  }
-
-		}
 }

@@ -67,32 +67,16 @@ public class MainFragment extends Fragment {
 		
 		Bundle bundle = getArguments();
 		ArrayList<String> images = new ArrayList<String>();
-		ArrayList<String> titles = new ArrayList<String>();
-		ArrayList<String> cameras = new ArrayList<String>();
-		ArrayList<String> telescopes = new ArrayList<String>();
-		ArrayList<String> websites = new ArrayList<String>();
-		ArrayList<String> descriptions = new ArrayList<String>();
-		ArrayList<String> users = new ArrayList<String>();
 		
 		if (bundle !=null) {
 		    data1 = (ArrayList<HashMap<String, String>>)bundle.getSerializable("passed data");
 		    Log.i("Main Fragment", "Data: " +data1);
 			
 			for (int i = 0; i < data1.size(); i++) {
+				
 				images.add(data1.get(i).get("url"));
-				//titles.add(data1.get(i).get("title"));
-				//cameras.add(data1.get(i).get("camera"));
-				//telescopes.add(data1.get(i).get("telescope"));
-				//websites.add(data1.get(i).get("website"));
-				//descriptions.add(data1.get(i).get("description"));
-				//users.add(data1.get(i).get("username"));
-				
 			}
-			//for (int i = 0;i <images.size(); i++) {
-				//ImageObject item = new ImageObject(images.get(i), users.get(i), cameras.get(i), descriptions.get(i), telescopes.get(i), websites.get(i), titles.get(i));
-				//imageItems.add(item);
-				
-			//}
+		
 			imageView.setImageUrl(data1.get(0).get("url"));
 			imageView.setOnClickListener(new OnClickListener(){
 
