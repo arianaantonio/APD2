@@ -15,6 +15,11 @@
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="android.app.Fragment"/>
 <fullyQualifiedTypeName name="com.arianaantonio.astropix.R.id"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
+<fullyQualifiedTypeName name="android.net.sip.SipAudioCall.Listener"/>
+<fullyQualifiedTypeName name="Fragments.SearchFragment.ParentListener"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="Fragments.GridViewFragment.ParentListener"/>
+<fullyQualifiedTypeName name="Fragments.MainFragment.ParentListener"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 </qualifiedTypeNameHistroy>

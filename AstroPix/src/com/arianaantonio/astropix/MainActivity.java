@@ -1,5 +1,14 @@
 package com.arianaantonio.astropix;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -8,6 +17,8 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import Fragments.DetailFragment;
 import Fragments.GridViewFragment;
@@ -340,12 +351,123 @@ public class MainActivity extends Activity
      	   Log.i("Nav Fragment", "You selected Favorites");
      	   currentView = "favorites";
      	   mTitle = getString(R.string.title_section4);
+     	   try {
+			getFavorites();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StreamCorruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
      	   SearchFragment sFrag = new SearchFragment();
      	   fragmentManager.beginTransaction().replace(R.id.container, sFrag).commit();
      	 
         }
     }
+    public void getFavorites() throws JSONException, StreamCorruptedException, IOException {
+    	final ArrayList<String> myData = new ArrayList<String>();
+    	String string;
+    	String [] newString = new String[100];
+    	JSONArray imagesArray = new JSONArray();
+    	JSONObject json = new JSONObject();
+    	HashMap<String, String> data = new HashMap<String, String>();
+    	
+    	String filePath = this.getFilesDir().getPath().toString() + "/FavoritesFile.ser";
+		File file = new File(filePath); 
+		FileInputStream fileIn = null;
+		
+		try {
+			fileIn = new FileInputStream(filePath);
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ObjectInputStream in = new ObjectInputStream(fileIn);
+        int count = 0;
+    		//JSONArray imagesArray = json.getJSONArray();
+    	
+    	try {
+    		//reading saved file of favorites and adding to array
+    		
+    		BufferedReader reader = new BufferedReader(new InputStreamReader(
+    				openFileInput("FavoritesFile.txt")));
+    		StringBuffer stringBuffer = new StringBuffer();
+    		while ((string = reader.readLine()) != null) {
+    			stringBuffer.append(string);
+    			String fileContent = fileManager.readStringFile(this, "FavoritesFile.txt");
+    			fileContent = fileContent.replace("*#$", "").replace("\n", "").replace("\b", "").replace("\f", "").replace("�","").replace("\r", "").replace("/", "/").replace("}", "},").replace("\t", "");
+    			json = new JSONObject(fileContent);
+    			Log.i("Main Activity", "JSON Object: " +json);
+    			
+    			FileReader fReader = new FileReader(filePath);
 
+    			JSONParser jsonParser = new JSONParser();
+    			JSONObject jsonObject;
+				try {
+					jsonObject = (JSONObject) jsonParser.parse(fReader);
+					String firstName = (String) jsonObject.get("url");
+	    			System.out.println("The first name is: " + firstName);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+    			// get a String from the JSON object
+    			
+    			
+    			//fileContent = fileContent.replace("*#$", "").replace("\n", "").replace("\b", "").replace("\f", "").replace("\r", "").replace("/", "/").replace("}", "},").replace("\t", "");
+    			//String testing = fileContent.substring(fileContent.length()-1);
+    			//Log.i("Main", "main" +testing);
+    			//json = new JSONObject(fileContent);
+    			//Log.i("Main Activity", "JSON Object: " +json);
+    			//List<String> items = Arrays.asList(fileContent.split("[*#$]"));
+    			//Log.i("Main Activity", "list:" +items);
+    			//myData.add(string);
+    			//newString = fileContent.split("[{}]");
+    			//ArrayList<HashMap<String, ?>> myData2 = new ArrayList<HashMap<String, ?>>();
+    			/*
+    			for (int i =0; i < items.size(); i++) {
+    				Log.i("Main Activity", "List Items: " +items.get(i));
+    				data.put("string", items.get(i));
+    				//json = new JSONObject(items.get(i));
+    				JSONArray jsonArray = new JSONArray();
+    				String test = jsonArray.getJSONObject(i).getString("url");
+    				
+    				Log.i("Main Activity", "JSON" +test);
+    			}*/
+    			//Log.i("Main Activity", "Favorites" +newString.toString());
+    			 
+    
+             //while (true) {
+            //ImageObject image = (ImageObject) in.readObject();
+           // HashMap<String,String> mapInFile=(HashMap<String,String>)in.readObject();
+           // String string1 = mapInFile.get("image");
+           // Log.i("Main Activity", "Array: " +string1);
+            //Log.i("Main Activity", "Array2: " +image);
+            }
+            //data = in.readObject();
+            
+            } 
+    		 catch (IOException e) {
+    		e.printStackTrace(); 
+    	} finally {
+            in.close();
+            fileIn.close();
+            }
+    	//imagesArray = json.getJSONArray("");
+    	//Log.i("Main Activity", "Split string: " +newString[0]);
+    	
+    	//Log.i("Main Activity", "JSON Array: " +imagesArray);
+    	
+    	//for (int i = 0; i < myData.size(); i++) {
+    		//Log.i("Main Activity", "Favorites data: " +myData);
+    	//}
+    }
     @Override
 	protected void onResume() {
 		
