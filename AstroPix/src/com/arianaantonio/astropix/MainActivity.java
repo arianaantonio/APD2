@@ -159,6 +159,7 @@ public class MainActivity extends Activity
 			String username = json.getString("user");
 			String description = json.getString("description");
 			String title = json.getString("title");
+			String website = url.substring(24, 30);
 
 			displayText.put("url", url);
 			displayText.put("description", description);
@@ -166,6 +167,7 @@ public class MainActivity extends Activity
 			displayText.put("telescope", telescope);
 			displayText.put("username", username);
 			displayText.put("title", title);
+			displayText.put("website", website);
 
 			Bundle bundle = new Bundle();
 			bundle.putSerializable("clicked data", displayText);
@@ -217,6 +219,8 @@ public class MainActivity extends Activity
     				String username = jsonArray.getJSONObject(i).getString("user");
     				String description = jsonArray.getJSONObject(i).getString("description");
     				String title = jsonArray.getJSONObject(i).getString("title");
+    				String website = url.substring(24, 30);
+    				
 
     				displayText.put("url", url);
     				displayText.put("description", description);
@@ -224,6 +228,7 @@ public class MainActivity extends Activity
     				displayText.put("telescope", telescope);
     				displayText.put("username", username);
     				displayText.put("title", title);
+    				displayText.put("website", website);
 
     				myData.add(displayText);
     				Bundle bundle = new Bundle();
@@ -243,7 +248,7 @@ public class MainActivity extends Activity
     				String username = jsonArray.getJSONObject(i).getString("user");
     				String description = jsonArray.getJSONObject(i).getString("description");
     				String title = jsonArray.getJSONObject(i).getString("title");
-    				String website = url.substring(24, 29);
+    				String website = url.substring(24, 30);
 
     				displayText.put("url", url);
     				displayText.put("description", description);
@@ -396,6 +401,7 @@ public class MainActivity extends Activity
     		String title = arraylist.get(i).get("title");
     		String description = arraylist.get(i).get("description");
     		
+    		
     		displayText.put("url", url);
 			displayText.put("description", description);
 			displayText.put("camera", camera);
@@ -443,7 +449,7 @@ public class MainActivity extends Activity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
+      
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { 

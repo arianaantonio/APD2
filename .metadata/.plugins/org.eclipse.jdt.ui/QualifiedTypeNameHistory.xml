@@ -13,8 +13,6 @@
 <fullyQualifiedTypeName name="android.text.format.DateFormat"/>
 <fullyQualifiedTypeName name="java.sql.Date"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
-<fullyQualifiedTypeName name="android.app.Fragment"/>
-<fullyQualifiedTypeName name="com.arianaantonio.astropix.R.id"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="android.net.sip.SipAudioCall.Listener"/>
 <fullyQualifiedTypeName name="Fragments.SearchFragment.ParentListener"/>
@@ -22,4 +20,9 @@
 <fullyQualifiedTypeName name="Fragments.GridViewFragment.ParentListener"/>
 <fullyQualifiedTypeName name="Fragments.MainFragment.ParentListener"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
+<fullyQualifiedTypeName name="Fragments.DetailFragment.AppendingObjectOutputStream"/>
+<fullyQualifiedTypeName name="org.json.simple.parser.JSONParser"/>
+<fullyQualifiedTypeName name="android.app.Fragment"/>
+<fullyQualifiedTypeName name="Fragments.FavoritesFragment.ParentListener"/>
+<fullyQualifiedTypeName name="com.arianaantonio.astropix.R.id"/>
 </qualifiedTypeNameHistroy>
