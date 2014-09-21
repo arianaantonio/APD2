@@ -28,7 +28,6 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.arianaantonio.astropix.MainActivity;
 import com.arianaantonio.astropix.R;
 import com.loopj.android.image.SmartImageView;
@@ -38,7 +37,7 @@ public class DetailFragment extends Fragment {
 	public static final String TAG = "DetailFragment.TAG";
 	private String astroBinUrl;
 	private ArrayList<HashMap<String, ?>> myData = new ArrayList<HashMap<String, ?>>();
-	//private ShareActionProvider mShareActionProvider;
+	private ShareActionProvider mShareActionProvider;
 	private String shareUrl;
 	
 	public static DetailFragment newInstance(int sectionNumber) {
@@ -122,22 +121,14 @@ public class DetailFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
 		inflater.inflate(R.menu.detail_action_bar, menu);
-		//MenuItem menuItem = menu.findItem(R.id.share);
-	   // mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
-		Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		 shareIntent.setType("text/plain");
-		 Uri uri = Uri.parse(astroBinUrl);
-		 String string = "Check out this image: " +astroBinUrl;
-		 shareIntent.putExtra(Intent.EXTRA_TEXT, string);
-		 MenuItem menuItem = menu.findItem(R.id.share);
-		 ShareActionProvider mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
-		 mShareActionProvider.setShareIntent(shareIntent);
+		MenuItem menuItem = menu.findItem(R.id.share);
+	    mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
 	    
 	    super.onCreateOptionsMenu(menu, inflater);
 		
 	}
 	public void doShare(Intent shareIntent) {
-	     //mShareActionProvider.setShareIntent(shareIntent);
+	     mShareActionProvider.setShareIntent(shareIntent);
 	 }
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -196,23 +187,19 @@ public class DetailFragment extends Fragment {
 			}
 			break;
 		case R.id.share:
-			/*
 			Intent shareIntent = new Intent(Intent.ACTION_SEND);
 			 shareIntent.setType("text/plain");
 			 Uri uri = Uri.parse(astroBinUrl);
 			 String string = "text";
-			 shareIntent.putExtra(Intent.EXTRA_TEXT, string);
-			 MenuItem menuItem = item;
-			 ShareActionProvider mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
-			 mShareActionProvider.setShareIntent(shareIntent);*/
-			 
+			 shareIntent.putExtra(Intent.EXTRA_STREAM, string);
+			 mShareActionProvider.setShareIntent(shareIntent);
 			 //doShare(shareIntent);
 			break;
 		case R.id.info:
 			Uri website = Uri.parse(astroBinUrl);
 			Intent websiteIntent = new Intent(Intent.ACTION_VIEW, website);
 			startActivity(websiteIntent);
-			break; 
+			break;
 		}
 		
 		return true;
