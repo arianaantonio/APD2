@@ -2,13 +2,11 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.arianaantonio.astropix.R"/>
 <fullyQualifiedTypeName name="android.os.Handler"/>
-<fullyQualifiedTypeName name="android.app.FragmentManager"/>
 <fullyQualifiedTypeName name="com.arianaantonio.astropix.R.string"/>
 <fullyQualifiedTypeName name="Fragments.GridViewFragment"/>
 <fullyQualifiedTypeName name="Fragments.MainFragment"/>
 <fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="android.app.Activity"/>
-<fullyQualifiedTypeName name="com.arianaantonio.astropix.R.layout"/>
 <fullyQualifiedTypeName name="android.webkit.WebView.FindListener"/>
 <fullyQualifiedTypeName name="android.text.format.DateFormat"/>
 <fullyQualifiedTypeName name="java.sql.Date"/>
@@ -24,5 +22,11 @@
 <fullyQualifiedTypeName name="org.json.simple.parser.JSONParser"/>
 <fullyQualifiedTypeName name="android.app.Fragment"/>
 <fullyQualifiedTypeName name="Fragments.FavoritesFragment.ParentListener"/>
+<fullyQualifiedTypeName name="com.arianaantonio.astropix.R.menu"/>
 <fullyQualifiedTypeName name="com.arianaantonio.astropix.R.id"/>
+<fullyQualifiedTypeName name="android.app.FragmentManager"/>
+<fullyQualifiedTypeName name="com.arianaantonio.astropix.R.layout"/>
+<fullyQualifiedTypeName name="com.arianaantonio.astropix.DetailActivity.ScreenPagerAdapter"/>
+<fullyQualifiedTypeName name="android.support.v4.app.FragmentManager"/>
+<fullyQualifiedTypeName name="com.arianaantonio.astropix.DetailActivity"/>
 </qualifiedTypeNameHistroy>

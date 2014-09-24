@@ -48,23 +48,24 @@ public final class R {
         public static final int splash=0x7f02000a;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b0018;
+        public static final int action_settings=0x7f0b0019;
         public static final int camera=0x7f0b0007;
         public static final int container=0x7f0b0001;
         public static final int description=0x7f0b000c;
         public static final int detailImage=0x7f0b000b;
         public static final int drawer_layout=0x7f0b0000;
-        public static final int favorites=0x7f0b0016;
+        public static final int favorites=0x7f0b0017;
         public static final int grid=0x7f0b000d;
         public static final int grid1=0x7f0b0013;
         public static final int imageView1=0x7f0b0014;
         public static final int image_of_the_day=0x7f0b0010;
-        public static final int info=0x7f0b0015;
+        public static final int info=0x7f0b0016;
         public static final int navigation_drawer=0x7f0b0002;
+        public static final int pager=0x7f0b0015;
         public static final int runner_up=0x7f0b0011;
-        public static final int search=0x7f0b0019;
+        public static final int search=0x7f0b001a;
         public static final int section_label=0x7f0b000e;
-        public static final int share=0x7f0b0017;
+        public static final int share=0x7f0b0018;
         public static final int smartimage=0x7f0b0012;
         public static final int telescope=0x7f0b0009;
         public static final int textView1=0x7f0b000f;
@@ -89,6 +90,7 @@ public final class R {
         public static final int grid_image=0x7f030007;
         public static final int gridview=0x7f030008;
         public static final int splash_screen=0x7f030009;
+        public static final int viewpager=0x7f03000a;
     }
     public static final class menu {
         public static final int detail_action_bar=0x7f0a0000;

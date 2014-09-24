@@ -21,8 +21,6 @@ import Fragments.NavigationDrawerFragment;
 import Fragments.SearchFragment;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +28,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,10 +41,14 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import api.FileManager;
 import api.ServiceClass;
+//import android.support.v4.app.FragmentManager;
+//import android.app.Fragment;
+//import android.support.v4.app.FragmentManager;
+//import android.app.Fragment;
 
 
-public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFragment.ParentListener, GridViewFragment.ParentListener, MainFragment.ParentListener, FavoritesFragment.ParentListener {
+public class MainActivity extends FragmentActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFragment.ParentListener, GridViewFragment.ParentListener, MainFragment.ParentListener, FavoritesFragment.ParentListener  {
 	
 	Context mContext;
 	FileManager mFile;
@@ -172,7 +177,7 @@ public class MainActivity extends Activity
 			Bundle bundle = new Bundle();
 			bundle.putSerializable("clicked data", displayText);
 			
-			FragmentManager manager = getFragmentManager();
+			FragmentManager manager = getSupportFragmentManager();
 			DetailFragment fragment = new DetailFragment();
 			fragment.setArguments(bundle);
 			manager.beginTransaction().replace(R.id.container, fragment).commit();
@@ -187,7 +192,7 @@ public class MainActivity extends Activity
     
     public void displayData(JSONArray jsonArray) throws MalformedURLException {
   
-    	FragmentManager manager = getFragmentManager();
+    	FragmentManager manager = getSupportFragmentManager();
     	myData.clear();
     	
 		if (jsonArray.length() == 0) {
@@ -236,7 +241,9 @@ public class MainActivity extends Activity
 
     				GridViewFragment fragment = new GridViewFragment();
     				fragment.setArguments(bundle);
-    				manager.beginTransaction().replace(R.id.container, fragment).commit();
+    				manager.beginTransaction().replace(R.id.container, fragment)
+    				.addToBackStack(null)
+    				.commit();
 
     			} else if (currentView.equals("search")) {
     				
@@ -318,7 +325,7 @@ public class MainActivity extends Activity
     
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-    	FragmentManager fragmentManager = getFragmentManager();
+    	FragmentManager fragmentManager = getSupportFragmentManager();
         
         
     	
@@ -413,7 +420,7 @@ public class MainActivity extends Activity
     		myPassedData.add(displayText);
     		Bundle bundle = new Bundle();
 			bundle.putSerializable("passed data", myPassedData);
-			FragmentManager manager = getFragmentManager();
+			FragmentManager manager = getSupportFragmentManager();
 			FavoritesFragment fragment = new FavoritesFragment();
 			fragment.setArguments(bundle);
 			manager.beginTransaction().replace(R.id.container, fragment).commit();
@@ -539,7 +546,7 @@ public class MainActivity extends Activity
 		mTitle = getString(R.string.title_section5);
 		restoreActionBar();
 		
-		FragmentManager manager = getFragmentManager();
+		FragmentManager manager = getSupportFragmentManager();
 		DetailFragment fragment = new DetailFragment();
 		fragment.setArguments(bundle);
 		manager.beginTransaction().replace(R.id.container, fragment).commit();

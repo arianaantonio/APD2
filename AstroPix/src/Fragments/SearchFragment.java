@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Fragment;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -122,7 +125,15 @@ public class SearchFragment extends Fragment {
 					
 					HashMap<String, ?> selectedListItem = data1.get(position);
 					Log.i("Search Fragment", "Clicked: " +selectedListItem);
-					listener.passBackClickedItem(selectedListItem);
+					//listener.passBackClickedItem(selectedListItem);
+					
+					Bundle bundle = new Bundle();
+					bundle.putSerializable("clicked data", selectedListItem);
+
+					FragmentManager manager = getFragmentManager();
+					DetailFragment fragment = new DetailFragment();
+					fragment.setArguments(bundle);
+					manager.beginTransaction().replace(R.id.container, fragment).commit();
 					
 				}
 				

@@ -5,20 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View; 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
 import com.arianaantonio.astropix.CustomBaseAdapter;
+import com.arianaantonio.astropix.DetailActivity;
 import com.arianaantonio.astropix.ImageObject;
 import com.arianaantonio.astropix.MainActivity;
 import com.arianaantonio.astropix.R;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
 
 public class GridViewFragment extends Fragment {
 
@@ -48,13 +52,14 @@ public class GridViewFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		
 		super.onAttach(activity);
-		((MainActivity) activity).onSectionAttached(getArguments().getInt(
-                ARG_SECTION_NUMBER));
+		//((MainActivity) activity).onSectionAttached(getArguments().getInt(
+                //ARG_SECTION_NUMBER));
+		/*
 		try {
 			listener = (ParentListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "class does not implement fragment interface");
-		}
+		}*/
 	}
 
 	@SuppressWarnings("unchecked")
@@ -74,7 +79,7 @@ public class GridViewFragment extends Fragment {
 		
 		if (bundle !=null) {
 		    data1 = (ArrayList<HashMap<String, String>>)bundle.getSerializable("passed data");
-			
+			//Log.i("Gridview", "data1" +data1);
 			for (int i = 0; i < data1.size(); i++) {
 				images.add(data1.get(i).get("url"));
 				titles.add(data1.get(i).get("title"));
@@ -108,7 +113,19 @@ public class GridViewFragment extends Fragment {
 					HashMap<String, ?> selectedListItem = data1.get(position);
 					//String clicked =  imageItems.get(position).getTitle();
 					Log.i("Search Fragment", "Clicked: " +selectedListItem);
-					listener.passBackClickedItem(selectedListItem);
+					//listener.passBackClickedItem(selectedListItem);
+					Bundle bundle = new Bundle();
+					//bundle.putSerializable("clicked data", selectedListItem);
+					bundle.putSerializable("Grid Images", data1);
+					//FragmentManager manager = getFragmentManager();
+					//DetailFragment fragment = new DetailFragment();
+					//fragment.setArguments(bundle);
+					//manager.beginTransaction().replace(R.id.container, fragment).commit();
+					Intent intent = new Intent(getActivity(), DetailActivity.class);
+					intent.putExtra("Grid bundle", bundle);
+					intent.putExtra("Position", position);
+					//Log.i("GridView Fragment", "Position: " +position+ "Data: " +data1);
+					startActivity(intent);
 					
 				}
 				

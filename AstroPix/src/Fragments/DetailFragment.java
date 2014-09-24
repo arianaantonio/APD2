@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,12 +29,12 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.arianaantonio.astropix.MainActivity;
 import com.arianaantonio.astropix.R;
 import com.loopj.android.image.SmartImageView;
+//import android.app.Fragment;
 
 public class DetailFragment extends Fragment {
+	
 	private static final String ARG_SECTION_NUMBER = "section_number";
 	public static final String TAG = "DetailFragment.TAG";
 	private String astroBinUrl;
@@ -57,8 +58,8 @@ public class DetailFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		
 		super.onAttach(activity);
-		((MainActivity) activity).onSectionAttached(getArguments().getInt(
-                ARG_SECTION_NUMBER));
+		//((MainActivity) activity).onSectionAttached(getArguments().getInt(
+                //ARG_SECTION_NUMBER));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -68,6 +69,8 @@ public class DetailFragment extends Fragment {
 		
 		
 		View view = inflater.inflate(R.layout.fragment_detail, container, false);
+		
+		
 		TextView titleView = (TextView) view.findViewById(R.id.title);
 		TextView usernameView = (TextView) view.findViewById(R.id.username);
 		TextView telescopeView = (TextView) view.findViewById(R.id.telescope);
@@ -76,7 +79,7 @@ public class DetailFragment extends Fragment {
 		SmartImageView imageView = (SmartImageView) view.findViewById(R.id.detailImage);
 		
 		Bundle bundle = getArguments();
-		
+		//Log.i("Detail Fragment", "Bundle: " +bundle);
 		HashMap<String, String> data = (HashMap<String, String>)bundle.getSerializable("clicked data");
 		Log.i("Detail Fragment", "Passed data: " +data);
 		
@@ -147,7 +150,7 @@ public class DetailFragment extends Fragment {
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i("Detail Fragment", "menu item clicked: " +item);
+		Log.i("Detail Fragment", "menu item clicked: " +item.getItemId());
 		
 		switch (item.getItemId()) {
 		case R.id.favorites:
@@ -196,25 +199,21 @@ public class DetailFragment extends Fragment {
 			}
 			break;
 		case R.id.share:
-			/*
-			Intent shareIntent = new Intent(Intent.ACTION_SEND);
-			 shareIntent.setType("text/plain");
-			 Uri uri = Uri.parse(astroBinUrl);
-			 String string = "text";
-			 shareIntent.putExtra(Intent.EXTRA_TEXT, string);
-			 MenuItem menuItem = item;
-			 ShareActionProvider mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
-			 mShareActionProvider.setShareIntent(shareIntent);*/
-			 
-			 //doShare(shareIntent);
 			break;
 		case R.id.info:
 			Uri website = Uri.parse(astroBinUrl);
 			Intent websiteIntent = new Intent(Intent.ACTION_VIEW, website);
 			startActivity(websiteIntent);
-			break; 
-		}
+			break;
 		
+		}
+		if (item.getItemId() == 16908332) {
+			Log.i("Detail Fragment", "Clicked up");
+			//FragmentManager manager = getFragmentManager();
+			//GridViewFragment fragment = new GridViewFragment();
+			//fragment.setArguments(bundle);
+			//manager.beginTransaction().replace(R.id.container, fragment).commit();
+		}
 		return true;
 	}
 }

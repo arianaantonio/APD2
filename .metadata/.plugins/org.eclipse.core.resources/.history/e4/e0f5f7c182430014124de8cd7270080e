@@ -1,0 +1,71 @@
+package com.arianaantonio.astropix;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import Fragments.DetailFragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+
+public class DetailActivity extends FragmentActivity {
+	private static final int NUM_PAGES = 20;
+	private ViewPager viewPager;
+	private PagerAdapter pagerAdapter;
+	ArrayList<HashMap<String, String>> data1 = new ArrayList<HashMap<String, String>>();
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void onCreate(Bundle arg0) {
+		// TODO Auto-generated method stub
+		super.onCreate(arg0);
+		setContentView(R.layout.viewpager);
+		
+		Intent intent = getIntent();
+		
+		Bundle bundle = intent.getBundleExtra("Grid bundle");
+		//Log.i("Detail Activity", "Bundle: " +bundle);
+		data1 = (ArrayList<HashMap<String, String>>)bundle.getSerializable("Grid Images");
+		//Log.i("Detail Activity", "Date: " +data1);
+		int position = intent.getIntExtra("Position", 0);
+		//Log.i("Detail Activity", "Position: " +position+ " Data: " +data1);
+		Log.i("Detail Activity", "Position: " +position);
+		viewPager= (ViewPager) findViewById(R.id.pager);
+		Log.i("Detail Activity", "Working1");
+		//pagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager());
+		Log.i("Detail Activity", "Working2");
+		viewPager.setAdapter(pagerAdapter);
+		Log.i("Detail Activity", "Working3");
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+	}
+/*
+	private class ScreenPagerAdapter extends FragmentStatePagerAdapter {
+		
+		public ScreenPagerAdapter(FragmentManager manager) {
+			super(manager);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			
+			return new DetailFragment();
+		}
+
+		@Override
+		public int getCount() {
+			
+			return NUM_PAGES;
+		}
+	}*/
+
+}

@@ -10,7 +10,10 @@ import com.arianaantonio.astropix.MainActivity;
 import com.arianaantonio.astropix.R;
 
 import android.app.Activity;
-import android.app.Fragment;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,9 +111,16 @@ public class FavoritesFragment extends Fragment {
 						int position, long id) {
 					
 					HashMap<String, ?> selectedListItem = data1.get(position);
-					//String clicked =  imageItems.get(position).getTitle();
 					Log.i("Search Fragment", "Clicked: " +selectedListItem);
-					listener.passBackClickedItem(selectedListItem);
+					//listener.passBackClickedItem(selectedListItem);
+					
+					Bundle bundle = new Bundle();
+					bundle.putSerializable("clicked data", selectedListItem);
+
+					FragmentManager manager = getFragmentManager();
+					DetailFragment fragment = new DetailFragment();
+					fragment.setArguments(bundle);
+					manager.beginTransaction().replace(R.id.container, fragment).commit(); 
 					
 				}
 				
