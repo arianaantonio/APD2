@@ -67,10 +67,10 @@ public final class R {
         public static final int section_label=0x7f0b000e;
         public static final int share=0x7f0b0018;
         public static final int smartimage=0x7f0b0012;
-        public static final int telescope=0x7f0b0009;
+        public static final int telescope=0x7f0b000a;
         public static final int textView1=0x7f0b000f;
         public static final int textView2=0x7f0b0005;
-        public static final int textView4=0x7f0b000a;
+        public static final int textView4=0x7f0b0009;
         public static final int textView5=0x7f0b0008;
         public static final int textView6=0x7f0b0006;
         public static final int title=0x7f0b0003;
@@ -105,6 +105,7 @@ public final class R {
         public static final int app_name=0x7f070000;
         public static final int camera=0x7f07000d;
         public static final int description=0x7f07000b;
+        public static final int detail_name=0x7f070016;
         public static final int favorite=0x7f070010;
         public static final int imageOfTheDay=0x7f070009;
         public static final int navigation_drawer_close=0x7f070005;

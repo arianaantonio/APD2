@@ -28,5 +28,6 @@
     <string name="search_title">Search AstroBin</string>
     <string name="search_hint">Crab Nebula</string>
     <string name="title_section5">Image Details</string>
+    <string name="detail_name">Image Details</string>
 
 </resources>

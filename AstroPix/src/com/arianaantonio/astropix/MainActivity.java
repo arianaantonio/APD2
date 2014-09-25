@@ -40,15 +40,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import api.FileManager;
-import api.ServiceClass;
-//import android.support.v4.app.FragmentManager;
-//import android.app.Fragment;
-//import android.support.v4.app.FragmentManager;
-//import android.app.Fragment;
+import api.ServiceClass; 
 
 
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFragment.ParentListener, GridViewFragment.ParentListener, MainFragment.ParentListener, FavoritesFragment.ParentListener  {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainFragment.ParentListener  {
 	
 	Context mContext;
 	FileManager mFile;
@@ -177,6 +173,8 @@ public class MainActivity extends FragmentActivity
 			Bundle bundle = new Bundle();
 			bundle.putSerializable("clicked data", displayText);
 			
+			mTitle = getString(R.string.title_section5);
+			
 			FragmentManager manager = getSupportFragmentManager();
 			DetailFragment fragment = new DetailFragment();
 			fragment.setArguments(bundle);
@@ -294,9 +292,6 @@ public class MainActivity extends FragmentActivity
     				fragment.setArguments(bundle);
     				manager.beginTransaction().replace(R.id.container, fragment).commit();
     				
-    				//imageView.setImageUrl(url);
-    				//imageView2.setImageUrl(runnerUp);
-    				;
     			}
 
     		} catch (JSONException e) {
@@ -461,9 +456,7 @@ public class MainActivity extends FragmentActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) { 
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
+
         	if (currentView.equals("search")) {
         		getMenuInflater().inflate(R.menu.options_menu, menu);
         		
@@ -474,10 +467,7 @@ public class MainActivity extends FragmentActivity
         		    
         		    searchView.setSearchableInfo(
         		            searchManager.getSearchableInfo(getComponentName()));
-        		    //ComponentName cn = new ComponentName(this, SearchActivity.class);
-        		    //searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
 
-        		
         	}
         	restoreActionBar();
             return true;
@@ -487,9 +477,6 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -497,20 +484,10 @@ public class MainActivity extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -537,21 +514,6 @@ public class MainActivity extends FragmentActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-	@Override
-	public void passBackClickedItem(HashMap<String, ?> item) {
-		//Log.i("Main Activity", "Passed over: " +item);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("clicked data", item);
-		
-		mTitle = getString(R.string.title_section5);
-		restoreActionBar();
-		
-		FragmentManager manager = getSupportFragmentManager();
-		DetailFragment fragment = new DetailFragment();
-		fragment.setArguments(bundle);
-		manager.beginTransaction().replace(R.id.container, fragment).commit();
-		
-	}
 
 	@Override
 	public void passBackClickedItemMain(String item) {

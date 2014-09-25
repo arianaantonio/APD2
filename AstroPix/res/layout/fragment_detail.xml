@@ -26,25 +26,22 @@
         android:layout_alignBaseline="@+id/textView2"
         android:layout_alignBottom="@+id/textView2"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="5dp"
         android:layout_toRightOf="@+id/textView6"
-      
         android:text=""
-        
         android:textColor="@color/white"
         android:textSize="17sp" />
 
     <TextView
         android:id="@+id/camera"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView5"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_toRightOf="@+id/title"
-        android:gravity="left"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:text=""
-        android:textAlignment="gravity"
         android:textColor="@color/white"
         android:textSize="17sp" />
 
@@ -53,10 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView6"
-        android:layout_alignLeft="@+id/camera"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="16dp"
+        android:layout_toRightOf="@+id/textView5"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text=""
         android:textColor="@color/white"
         android:textSize="17sp" />

@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 
 import com.arianaantonio.astropix.R;
 import com.loopj.android.image.SmartImageView;
-//import android.app.Fragment;
 
 public class DetailFragment extends Fragment {
 	
@@ -39,8 +37,6 @@ public class DetailFragment extends Fragment {
 	public static final String TAG = "DetailFragment.TAG";
 	private String astroBinUrl;
 	private ArrayList<HashMap<String, ?>> myData = new ArrayList<HashMap<String, ?>>();
-	//private ShareActionProvider mShareActionProvider;
-	private String shareUrl;
 	
 	public static DetailFragment newInstance(int sectionNumber) {
 		
@@ -58,8 +54,6 @@ public class DetailFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		
 		super.onAttach(activity);
-		//((MainActivity) activity).onSectionAttached(getArguments().getInt(
-                //ARG_SECTION_NUMBER));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -81,7 +75,7 @@ public class DetailFragment extends Fragment {
 		Bundle bundle = getArguments();
 		//Log.i("Detail Fragment", "Bundle: " +bundle);
 		HashMap<String, String> data = (HashMap<String, String>)bundle.getSerializable("clicked data");
-		Log.i("Detail Fragment", "Passed data: " +data);
+		//Log.i("Detail Fragment", "Passed data: " +data);
 		
 		String images = data.get("url");
 		String titles = data.get("title");
@@ -91,7 +85,6 @@ public class DetailFragment extends Fragment {
 		String descriptions = data.get("description");
 		String users = data.get("username");
 		astroBinUrl = "http://www.astrobin.com/" +websites;
-		shareUrl = images;
 		
 		String displayCamera = cameras.replace("\"", "").replace("[", "").replace("]", "");
 		String displayTelescope = telescopes.replace("\"", "").replace("[", "").replace("]", "");
@@ -125,29 +118,26 @@ public class DetailFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
 		inflater.inflate(R.menu.detail_action_bar, menu);
-		//MenuItem menuItem = menu.findItem(R.id.share);
-	   // mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
+
 		Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		 shareIntent.setType("text/plain");
-		 Uri uri = Uri.parse(astroBinUrl);
-		 String string = "Check out this image: " +astroBinUrl;
-		 shareIntent.putExtra(Intent.EXTRA_TEXT, string);
-		 MenuItem menuItem = menu.findItem(R.id.share);
-		 ShareActionProvider mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
-		 mShareActionProvider.setShareIntent(shareIntent);
-	    
-	    super.onCreateOptionsMenu(menu, inflater);
-		
+		shareIntent.setType("text/plain");
+		String string = "Check out this image: " +astroBinUrl;
+		shareIntent.putExtra(Intent.EXTRA_TEXT, string);
+		MenuItem menuItem = menu.findItem(R.id.share);
+		ShareActionProvider mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
+		mShareActionProvider.setShareIntent(shareIntent);
+
+		super.onCreateOptionsMenu(menu, inflater);
+
 	}
-	public void doShare(Intent shareIntent) {
-	     //mShareActionProvider.setShareIntent(shareIntent);
-	 }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i("Detail Fragment", "menu item clicked: " +item.getItemId());
@@ -157,7 +147,6 @@ public class DetailFragment extends Fragment {
 			ArrayList<HashMap<String, String>> appendData = new ArrayList<HashMap<String, String>>();
 			String filePath = getActivity().getFilesDir().getPath().toString() + "/FavoritesFile.ser";
 			File file = new File(filePath); 
-
 
 			FileInputStream fileIn;
 			ObjectInputStream in;
@@ -207,13 +196,7 @@ public class DetailFragment extends Fragment {
 			break;
 		
 		}
-		if (item.getItemId() == 16908332) {
-			Log.i("Detail Fragment", "Clicked up");
-			//FragmentManager manager = getFragmentManager();
-			//GridViewFragment fragment = new GridViewFragment();
-			//fragment.setArguments(bundle);
-			//manager.beginTransaction().replace(R.id.container, fragment).commit();
-		}
+		
 		return true;
 	}
 }
